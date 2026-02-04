@@ -41,6 +41,8 @@ public class users extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         nav1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
+        nav3 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
         nav2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         logout = new javax.swing.JPanel();
@@ -89,6 +91,26 @@ public class users extends javax.swing.JFrame {
         nav1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
 
         jPanel2.add(nav1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 110, 120, 40));
+
+        nav3.setBackground(new java.awt.Color(30, 30, 30));
+        nav3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nav3MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                nav3MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                nav3MouseExited(evt);
+            }
+        });
+        nav3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("Profile");
+        nav3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
+
+        jPanel2.add(nav3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 260, 150, 40));
 
         nav2.setBackground(new java.awt.Color(30, 30, 30));
         nav2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -178,6 +200,20 @@ public class users extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_nav1MouseClicked
 
+    private void nav3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav3MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nav3MouseEntered
+
+    private void nav3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav3MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nav3MouseExited
+
+    private void nav3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav3MouseClicked
+        profile prof = new profile();
+        prof.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_nav3MouseClicked
+
     
     public static void main(String args[]) {
         
@@ -210,12 +246,14 @@ public class users extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPanel logout;
     private javax.swing.JPanel nav1;
     private javax.swing.JPanel nav2;
+    private javax.swing.JPanel nav3;
     private javax.swing.JTable usertable;
     // End of variables declaration//GEN-END:variables
 }

@@ -10,6 +10,11 @@ import net.proteanit.sql.DbUtils;
 
 public class config {
 
+    public static String loggedInFullname;
+    public static String loggedInEmail;
+    public static String loggedInType;
+    
+    
     public static Connection connectDB() {
         Connection con = null;
         try {
@@ -199,4 +204,55 @@ public class config {
     return details;
 }
 
+   public String[] getLoggedInUserProfile() {
+
+    String[] profile = new String[3]; 
+    // [0] = fullname, [1] = email, [2] = type
+
+    String sql = "SELECT U_fullname, U_email, U_type FROM tbl_accounts WHERE U_email = ?";
+
+    try (Connection conn = connectDB();
+         PreparedStatement pst = conn.prepareStatement(sql)) {
+
+        pst.setString(1, loggedInEmail);
+
+        try (ResultSet rs = pst.executeQuery()) {
+            if (rs.next()) {
+                profile[0] = rs.getString("U_fullname");
+                profile[1] = rs.getString("U_email");
+                profile[2] = rs.getString("U_type");
+            }
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Error loading user profile: " + e.getMessage());
+    }
+
+    return profile;
 }
+
+    public void setLoggedInUser(String email, String password) {
+
+    String sql = "SELECT U_fullname, U_email, U_type FROM tbl_accounts WHERE U_email=? AND U_password=?";
+
+    try (Connection conn = connectDB();
+         PreparedStatement pst = conn.prepareStatement(sql)) {
+
+        pst.setString(1, email);
+        pst.setString(2, password);
+
+        ResultSet rs = pst.executeQuery();
+
+        if (rs.next()) {
+            loggedInFullname = rs.getString("U_fullname");
+            loggedInEmail = rs.getString("U_email");
+            loggedInType = rs.getString("U_type");
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Error setting logged-in user: " + e.getMessage());
+    }
+}
+
+}
+    

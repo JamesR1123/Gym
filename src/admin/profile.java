@@ -5,10 +5,21 @@ import java.awt.Color;
 import java.awt.Cursor;
 import elitegym.login;
 
-public class dashboard extends javax.swing.JFrame {
+public class profile extends javax.swing.JFrame {
    
-    public dashboard() {
+    public void loadLoggedInUserProfile() {
+    fullname.setText(config.loggedInFullname);
+    email.setText(config.loggedInEmail);
+    type.setText(config.loggedInType);
+}
+
+
+
+
+    public profile() {
         initComponents();
+        
+        loadLoggedInUserProfile();
         nav1.setOpaque(true);
         nav2.setOpaque(true);
         logout.setOpaque(true);
@@ -38,6 +49,14 @@ public class dashboard extends javax.swing.JFrame {
         logout = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
+        fullname = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        type = new javax.swing.JLabel();
+        email = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -128,9 +147,39 @@ public class dashboard extends javax.swing.JFrame {
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 230, 700));
 
-        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, 770, 670));
+
+        fullname.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        fullname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        fullname.setText("name");
+        jPanel1.add(fullname, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 130, 536, 30));
+
+        jLabel1.setText("Type");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 310, -1, -1));
+
+        jLabel7.setText("Email");
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 250, -1, -1));
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel8.setText("Personal Information");
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 210, -1, -1));
+
+        type.setText("type");
+        jPanel1.add(type, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 330, -1, -1));
+
+        email.setText("email");
+        jPanel1.add(email, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 270, -1, -1));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 120, 780, 570));
+
+        jPanel3.setBackground(new java.awt.Color(250, 249, 246));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel6.setText("Admin Profile");
+        jPanel3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 300, -1));
+
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, 780, 70));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -166,21 +215,19 @@ public class dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_nav1MouseEntered
 
     private void nav1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav1MouseClicked
-        dashboard db = new dashboard();
+        profile db = new profile();
         db.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_nav1MouseClicked
 
     private void nav2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav2MouseClicked
-        profile us = new profile();
+        users us = new users();
         us.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_nav2MouseClicked
 
     private void nav3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav3MouseClicked
-       users user = new users();
-       user.setVisible(true);
-       this.dispose();
+        // TODO add your handling code here:
     }//GEN-LAST:event_nav3MouseClicked
 
     private void nav3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav3MouseEntered
@@ -202,32 +249,40 @@ public class dashboard extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(profile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(profile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(profile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(profile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new dashboard().setVisible(true);
+                new profile().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel email;
+    private javax.swing.JLabel fullname;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel logout;
     private javax.swing.JPanel nav1;
     private javax.swing.JPanel nav2;
     private javax.swing.JPanel nav3;
+    private javax.swing.JLabel type;
     // End of variables declaration//GEN-END:variables
 }
