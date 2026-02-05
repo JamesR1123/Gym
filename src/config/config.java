@@ -10,11 +10,12 @@ import net.proteanit.sql.DbUtils;
 
 public class config {
 
+    // Global logged-in user info
     public static String loggedInFullname;
     public static String loggedInEmail;
     public static String loggedInType;
-    
-    
+
+    // ================= DATABASE CONNECTION =================
     public static Connection connectDB() {
         Connection con = null;
         try {
@@ -27,30 +28,13 @@ public class config {
         return con;
     }
 
+    // ================= GENERIC INSERT =================
     public void addRecord(String sql, Object... values) {
-        try (Connection conn = this.connectDB();
+        try (Connection conn = connectDB();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             for (int i = 0; i < values.length; i++) {
-                if (values[i] instanceof Integer) {
-                    pstmt.setInt(i + 1, (Integer) values[i]);
-                } else if (values[i] instanceof Double) {
-                    pstmt.setDouble(i + 1, (Double) values[i]);
-                } else if (values[i] instanceof Float) {
-                    pstmt.setFloat(i + 1, (Float) values[i]);
-                } else if (values[i] instanceof Long) {
-                    pstmt.setLong(i + 1, (Long) values[i]);
-                } else if (values[i] instanceof Boolean) {
-                    pstmt.setBoolean(i + 1, (Boolean) values[i]);
-                } else if (values[i] instanceof java.util.Date) {
-                    pstmt.setDate(i + 1, new java.sql.Date(((java.util.Date) values[i]).getTime()));
-                } else if (values[i] instanceof java.sql.Date) {
-                    pstmt.setDate(i + 1, (java.sql.Date) values[i]);
-                } else if (values[i] instanceof java.sql.Timestamp) {
-                    pstmt.setTimestamp(i + 1, (java.sql.Timestamp) values[i]);
-                } else {
-                    pstmt.setString(i + 1, values[i].toString());
-                }
+                pstmt.setObject(i + 1, values[i]);
             }
 
             pstmt.executeUpdate();
@@ -60,6 +44,7 @@ public class config {
         }
     }
 
+    // ================= AUTHENTICATE (TRUE/FALSE) =================
     public boolean authenticate(String sql, Object... values) {
         try (Connection conn = connectDB();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -69,9 +54,7 @@ public class config {
             }
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    return true;
-                }
+                return rs.next();
             }
         } catch (SQLException e) {
             System.out.println("Login Error: " + e.getMessage());
@@ -79,6 +62,7 @@ public class config {
         return false;
     }
 
+    // ================= DISPLAY DATA TO TABLE =================
     public void displayData(String sql, javax.swing.JTable table) {
         try (Connection conn = connectDB();
              PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -91,69 +75,159 @@ public class config {
         }
     }
 
-    // Validate login with message for pending accounts
-    public boolean validateLogin(String email, String password) {
-        if (email.trim().isEmpty() || password.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
+    // ================= LOGIN CORE =================
+    public String[] getLoginDetails(String email, char[] passwordChars) {
+        String password = String.valueOf(passwordChars);
+        String[] details = new String[2]; // [0]=status, [1]=type
 
-        String status = checkLoginStatus(email, password);
+        String sql = "SELECT U_status, U_type FROM tbl_accounts WHERE U_email=? AND U_password=?";
 
-        if (status == null) {
-            JOptionPane.showMessageDialog(null, "Invalid email or password", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        } else if (status.equalsIgnoreCase("Pending")) {
-            JOptionPane.showMessageDialog(null, "Your account is pending approval", "Pending", JOptionPane.INFORMATION_MESSAGE);
-            return false;
-        } else if (status.equalsIgnoreCase("Approved")) {
-            return true;
-        } else {
-            JOptionPane.showMessageDialog(null, "Unknown account status", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-    }
+        try (Connection conn = connectDB();
+             PreparedStatement pst = conn.prepareStatement(sql)) {
 
-    // Check login status
-    public String checkLoginStatus(String email, String password) {
-    String status = null;
-    String sql = "SELECT U_status FROM tbl_accounts WHERE U_email=? AND U_password=?";
-    try (Connection conn = connectDB();
-         PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setString(1, email);
+            pst.setString(2, password);
 
-        pst.setString(1, email);
-        pst.setString(2, password);
-
-        try (ResultSet rs = pst.executeQuery()) {
-            if (rs.next()) {
-                status = rs.getString("U_status"); 
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    details[0] = rs.getString("U_status");
+                    details[1] = rs.getString("U_type");
+                }
             }
-        }
-    } catch (SQLException e) {
-        System.out.println("Error checking login status: " + e.getMessage());
-    }
-    return status;
-}
 
-    // Validate registration
-    public boolean validateRegister(String fullname, String email, String password, String confirm) {
-        if (fullname.trim().isEmpty() || email.trim().isEmpty() || password.trim().isEmpty() || confirm.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (SQLException e) {
+            System.out.println("Error getting login details: " + e.getMessage());
+        } finally {
+            java.util.Arrays.fill(passwordChars, '\0');
+        }
+
+        return details;
+    }
+
+    // ================= SET LOGGED IN USER =================
+    public void setLoggedInUser(String email, char[] passwordChars) {
+        String password = String.valueOf(passwordChars);
+
+        String sql = "SELECT U_fullname, U_email, U_type FROM tbl_accounts WHERE U_email=? AND U_password=?";
+
+        try (Connection conn = connectDB();
+             PreparedStatement pst = conn.prepareStatement(sql)) {
+
+            pst.setString(1, email);
+            pst.setString(2, password);
+
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                loggedInFullname = rs.getString("U_fullname");
+                loggedInEmail = rs.getString("U_email");
+                loggedInType = rs.getString("U_type");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error setting logged-in user: " + e.getMessage());
+        } finally {
+            java.util.Arrays.fill(passwordChars, '\0');
+        }
+    }
+
+    // ================= MASTER LOGIN HANDLER =================
+    public boolean handleLogin(String email, char[] passwordChars, javax.swing.JFrame currentFrame) {
+
+        if (email.trim().isEmpty() || passwordChars.length == 0) {
+            JOptionPane.showMessageDialog(null,
+                    "Please fill in all fields",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return false;
         }
+
+        String[] loginDetails = getLoginDetails(email, passwordChars);
+
+        if (loginDetails[0] == null) {
+            JOptionPane.showMessageDialog(null,
+                    "Login failed! Incorrect email or password.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        String status = loginDetails[0];
+        String type = loginDetails[1];
+
+        if (status.equalsIgnoreCase("Pending")) {
+            JOptionPane.showMessageDialog(null,
+                    "Your account is still pending approval. Please wait for admin confirmation.",
+                    "Pending",
+                    JOptionPane.INFORMATION_MESSAGE);
+            return false;
+        }
+
+        if (status.equalsIgnoreCase("Approved")) {
+
+            setLoggedInUser(email, passwordChars);
+
+            JOptionPane.showMessageDialog(null,
+                    "Login successful! Welcome " + loggedInFullname,
+                    "Welcome",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            if (type.equalsIgnoreCase("Admin")) {
+                new admin.accountmanager().setVisible(true);
+            } else if (type.equalsIgnoreCase("User")) {
+                new user.userprofile().setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(null,
+                        "Unknown user type!",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+
+            currentFrame.dispose();
+            return true;
+        }
+
+        JOptionPane.showMessageDialog(null,
+                "Unknown account status",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+
+    // ================= REGISTER =================
+    public boolean validateRegister(String fullname, String email, char[] passwordChars, char[] confirmChars) {
+
+        if (fullname.trim().isEmpty() || email.trim().isEmpty()
+                || passwordChars.length == 0 || confirmChars.length == 0) {
+            JOptionPane.showMessageDialog(null,
+                    "Please fill in all fields",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        String password = String.valueOf(passwordChars);
+        String confirm = String.valueOf(confirmChars);
 
         if (!password.equals(confirm)) {
-            JOptionPane.showMessageDialog(null, "Passwords do not match", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "Passwords do not match",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         if (password.length() < 6) {
-            JOptionPane.showMessageDialog(null, "Password must be at least 6 characters", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "Password must be at least 6 characters",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
-        // Check if email already exists
         String sqlCheck = "SELECT * FROM tbl_accounts WHERE U_email=?";
+
         try (Connection conn = connectDB();
              PreparedStatement psCheck = conn.prepareStatement(sqlCheck)) {
 
@@ -161,98 +235,59 @@ public class config {
             ResultSet rs = psCheck.executeQuery();
 
             if (rs.next()) {
-                JOptionPane.showMessageDialog(null, "Email already exists", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null,
+                        "Email already exists",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
                 return false;
             }
 
-            // Insert new user
-            String sqlInsert = "INSERT INTO tbl_accounts(U_fullname,U_email,U_password,U_status) VALUES(?,?,?,?)";
+            String sqlInsert = "INSERT INTO tbl_accounts(U_fullname,U_email,U_password,U_status,U_type) VALUES(?,?,?,?,?)";
+
             try (PreparedStatement psInsert = conn.prepareStatement(sqlInsert)) {
                 psInsert.setString(1, fullname);
                 psInsert.setString(2, email);
                 psInsert.setString(3, password);
-                psInsert.setString(4, "Pending"); 
+                psInsert.setString(4, "Pending");
+                psInsert.setString(5, "User");
                 psInsert.executeUpdate();
                 return true;
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "Database error: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return false;
+        } finally {
+            java.util.Arrays.fill(passwordChars, '\0');
+            java.util.Arrays.fill(confirmChars, '\0');
         }
     }
-    
-    public String[] getLoginDetails(String email, String password) {
-    String[] details = new String[2]; // [0] = status, [1] = type
-    String sql = "SELECT U_status, U_type FROM tbl_accounts WHERE U_email=? AND U_password=?";
-    try (Connection conn = connectDB();
-         PreparedStatement pst = conn.prepareStatement(sql)) {
 
-        pst.setString(1, email);
-        pst.setString(2, password);
+    // ================= LOAD PROFILE =================
+    public String[] getLoggedInUserProfile() {
+        String[] profile = new String[3];
+        String sql = "SELECT U_fullname, U_email, U_type FROM tbl_accounts WHERE U_email = ?";
 
-        try (ResultSet rs = pst.executeQuery()) {
-            if (rs.next()) {
-                details[0] = rs.getString("U_status"); // Pending / Approved
-                details[1] = rs.getString("U_type");   // Admin / User
+        try (Connection conn = connectDB();
+             PreparedStatement pst = conn.prepareStatement(sql)) {
+
+            pst.setString(1, loggedInEmail);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    profile[0] = rs.getString("U_fullname");
+                    profile[1] = rs.getString("U_email");
+                    profile[2] = rs.getString("U_type");
+                }
             }
-        }
-    } catch (SQLException e) {
-        System.out.println("Error getting login details: " + e.getMessage());
-    }
-    return details;
-}
 
-   public String[] getLoggedInUserProfile() {
-
-    String[] profile = new String[3]; 
-    // [0] = fullname, [1] = email, [2] = type
-
-    String sql = "SELECT U_fullname, U_email, U_type FROM tbl_accounts WHERE U_email = ?";
-
-    try (Connection conn = connectDB();
-         PreparedStatement pst = conn.prepareStatement(sql)) {
-
-        pst.setString(1, loggedInEmail);
-
-        try (ResultSet rs = pst.executeQuery()) {
-            if (rs.next()) {
-                profile[0] = rs.getString("U_fullname");
-                profile[1] = rs.getString("U_email");
-                profile[2] = rs.getString("U_type");
-            }
+        } catch (SQLException e) {
+            System.out.println("Error loading user profile: " + e.getMessage());
         }
 
-    } catch (SQLException e) {
-        System.out.println("Error loading user profile: " + e.getMessage());
-    }
-
-    return profile;
-}
-
-    public void setLoggedInUser(String email, String password) {
-
-    String sql = "SELECT U_fullname, U_email, U_type FROM tbl_accounts WHERE U_email=? AND U_password=?";
-
-    try (Connection conn = connectDB();
-         PreparedStatement pst = conn.prepareStatement(sql)) {
-
-        pst.setString(1, email);
-        pst.setString(2, password);
-
-        ResultSet rs = pst.executeQuery();
-
-        if (rs.next()) {
-            loggedInFullname = rs.getString("U_fullname");
-            loggedInEmail = rs.getString("U_email");
-            loggedInType = rs.getString("U_type");
-        }
-
-    } catch (SQLException e) {
-        System.out.println("Error setting logged-in user: " + e.getMessage());
+        return profile;
     }
 }
-
-}
-    

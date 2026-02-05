@@ -6,9 +6,9 @@ import java.awt.Cursor;
 import elitegym.login;
 
 
-public class users extends javax.swing.JFrame {
+public class accountmanager extends javax.swing.JFrame {
    
-    public users() {
+    public accountmanager() {
         initComponents();
         getUsersData();
         nav1.setOpaque(true);
@@ -108,7 +108,7 @@ public class users extends javax.swing.JFrame {
 
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Profile");
-        nav3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
+        nav3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
         jPanel2.add(nav3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 260, 150, 40));
 
@@ -129,7 +129,7 @@ public class users extends javax.swing.JFrame {
 
         jPanel2.add(nav2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 190, 150, 40));
 
-        logout.setBackground(new java.awt.Color(30, 30, 30));
+        logout.setBackground(new java.awt.Color(255, 255, 255));
         logout.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         logout.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         logout.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -145,7 +145,7 @@ public class users extends javax.swing.JFrame {
         });
         logout.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setBackground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("Logout");
         logout.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, -1, -1));
 
@@ -201,11 +201,11 @@ public class users extends javax.swing.JFrame {
     }//GEN-LAST:event_nav1MouseClicked
 
     private void nav3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav3MouseEntered
-        // TODO add your handling code here:
+        nav3.setBackground(new Color (255, 249, 196));        
     }//GEN-LAST:event_nav3MouseEntered
 
     private void nav3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav3MouseExited
-        // TODO add your handling code here:
+        nav3.setBackground(new Color(30,30,30));
     }//GEN-LAST:event_nav3MouseExited
 
     private void nav3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav3MouseClicked
@@ -225,18 +225,18 @@ public class users extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(users.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(accountmanager.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(users.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(accountmanager.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(users.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(accountmanager.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(users.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(accountmanager.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new users().setVisible(true);
+                new accountmanager().setVisible(true);
             }
         });
     }

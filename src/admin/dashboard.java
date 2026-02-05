@@ -133,6 +133,7 @@ public class dashboard extends javax.swing.JFrame {
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, 770, 670));
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void nav2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav2MouseEntered
@@ -178,17 +179,16 @@ public class dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_nav2MouseClicked
 
     private void nav3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav3MouseClicked
-       users user = new users();
+       accountmanager user = new accountmanager();
        user.setVisible(true);
        this.dispose();
     }//GEN-LAST:event_nav3MouseClicked
-
+ 
     private void nav3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav3MouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nav3MouseEntered
+       nav3.setBackground(new Color (255, 249, 196));    }//GEN-LAST:event_nav3MouseEntered
 
     private void nav3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav3MouseExited
-        // TODO add your handling code here:
+       nav3.setBackground(new Color(30,30,30));
     }//GEN-LAST:event_nav3MouseExited
 
     

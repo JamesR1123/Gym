@@ -10,7 +10,7 @@ public class profile extends javax.swing.JFrame {
     public void loadLoggedInUserProfile() {
     fullname.setText(config.loggedInFullname);
     email.setText(config.loggedInEmail);
-    type.setText(config.loggedInType);
+    type.setText("Admin");
 }
 
 
@@ -155,13 +155,15 @@ public class profile extends javax.swing.JFrame {
         fullname.setText("name");
         jPanel1.add(fullname, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 130, 536, 30));
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText("Type");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 310, -1, -1));
 
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel7.setText("Email");
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 250, -1, -1));
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel8.setText("Personal Information");
         jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 210, -1, -1));
 
@@ -182,6 +184,7 @@ public class profile extends javax.swing.JFrame {
         getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, 780, 70));
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void nav2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav2MouseEntered
@@ -221,21 +224,23 @@ public class profile extends javax.swing.JFrame {
     }//GEN-LAST:event_nav1MouseClicked
 
     private void nav2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav2MouseClicked
-        users us = new users();
+        accountmanager us = new accountmanager();
         us.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_nav2MouseClicked
 
     private void nav3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav3MouseClicked
-        // TODO add your handling code here:
+      accountmanager us = new accountmanager();
+      us.setVisible(true);
+      this.dispose();
     }//GEN-LAST:event_nav3MouseClicked
 
     private void nav3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav3MouseEntered
-        // TODO add your handling code here:
+        nav3.setBackground(new Color (255, 249, 196));
     }//GEN-LAST:event_nav3MouseEntered
 
     private void nav3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav3MouseExited
-        // TODO add your handling code here:
+        nav3.setBackground(new Color(30,30,30));
     }//GEN-LAST:event_nav3MouseExited
 
     

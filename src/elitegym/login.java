@@ -3,7 +3,7 @@ package elitegym;
 
 import config.config;
 import javax.swing.JOptionPane;
-import admin.users;
+import admin.accountmanager;
 import user.userprofile;
 
 
@@ -135,6 +135,7 @@ public class login extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void psActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_psActionPerformed
@@ -146,40 +147,53 @@ public class login extends javax.swing.JFrame {
     }//GEN-LAST:event_emActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    config.loggedInEmail = em.getText();
-                            
-    String email = em.getText();
-    String password = new String(ps.getPassword());
+   config.loggedInEmail = em.getText();
 
-    config con = new config();
-    
-    String[] loginDetails = con.getLoginDetails(email, password);
-    String status = loginDetails[0];
-    String type = loginDetails[1];
+String email = em.getText();
+char[] password = ps.getPassword();   // CORRECT way
 
-    if (status == null) {
-        JOptionPane.showMessageDialog(this, "Login failed! Incorrect email or password.", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
+config con = new config();
 
-    if (status.equals("Pending")) {
-        JOptionPane.showMessageDialog(this, "Your account is still pending approval. Please wait for admin confirmation.", "Pending", JOptionPane.INFORMATION_MESSAGE);
-        return;
-    }
+String[] loginDetails = con.getLoginDetails(email, password);
+String status = loginDetails[0];
+String type = loginDetails[1];
 
-    if (status.equals("Approved")) {
-        JOptionPane.showMessageDialog(this, "Login successful! Welcome " + email, "Welcome", JOptionPane.INFORMATION_MESSAGE);
+if (status == null) {
+    JOptionPane.showMessageDialog(this, 
+        "Login failed! Incorrect email or password.", 
+        "Error", 
+        JOptionPane.ERROR_MESSAGE);
+    return;
+}
 
-         if (type.equalsIgnoreCase("Admin")) {
-        new admin.users().setVisible(true); // Admin dashboard
+if (status.equalsIgnoreCase("Pending")) {
+    JOptionPane.showMessageDialog(this, 
+        "Your account is still pending approval. Please wait for admin confirmation.", 
+        "Pending", 
+        JOptionPane.INFORMATION_MESSAGE);
+    return;
+}
+
+if (status.equalsIgnoreCase("Approved")) {
+    JOptionPane.showMessageDialog(this, 
+        "Login successful! Welcome " + email, 
+        "Welcome", 
+        JOptionPane.INFORMATION_MESSAGE);
+
+    if (type.equalsIgnoreCase("Admin")) {
+        new admin.accountmanager().setVisible(true);
     } else if (type.equalsIgnoreCase("User")) {
-        new user.userprofile().setVisible(true); // User profile
+        new user.userprofile().setVisible(true);
     } else {
-        JOptionPane.showMessageDialog(this, "Unknown user type!", "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, 
+            "Unknown user type!", 
+            "Error", 
+            JOptionPane.ERROR_MESSAGE);
     }
 
-        this.dispose();
-    }
+    this.dispose();
+}
+
 
 
 
