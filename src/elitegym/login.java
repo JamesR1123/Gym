@@ -4,6 +4,7 @@ package elitegym;
 import config.config;
 import javax.swing.JOptionPane;
 import admin.accountmanager;
+import config.Session;
 import user.userprofile;
 
 
@@ -29,7 +30,9 @@ public class login extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         register = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -38,14 +41,14 @@ public class login extends javax.swing.JFrame {
 
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Email");
-        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 140, -1, -1));
+        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, -1, -1));
 
         em.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 emActionPerformed(evt);
             }
         });
-        jPanel2.add(em, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, 240, 30));
+        jPanel2.add(em, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 180, 240, 30));
 
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Password");
@@ -86,7 +89,7 @@ public class login extends javax.swing.JFrame {
 
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Login");
-        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 60, 80, 50));
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, 80, 30));
 
         register.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
         register.setForeground(new java.awt.Color(255, 255, 255));
@@ -99,29 +102,19 @@ public class login extends javax.swing.JFrame {
         jPanel2.add(register, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 400, -1, -1));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 102));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel5.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel5.setFont(new java.awt.Font("Segoe UI Semibold", 1, 36)); // NOI18N
-        jLabel5.setText("EliteGym");
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Logo.png"))); // NOI18N
+        jLabel1.setPreferredSize(new java.awt.Dimension(148, 161));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-80, 180, 440, -1));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(108, 108, 108)
-                .addComponent(jLabel5)
-                .addContainerGap(108, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(70, 70, 70)
-                .addComponent(jLabel5)
-                .addContainerGap(372, Short.MAX_VALUE))
-        );
+        jPanel2.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 0, 400, 490));
 
-        jPanel2.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 0, 360, 490));
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/account.png"))); // NOI18N
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 180, 40, 30));
+
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/password.png"))); // NOI18N
+        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 240, 40, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -147,57 +140,73 @@ public class login extends javax.swing.JFrame {
     }//GEN-LAST:event_emActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-   config.loggedInEmail = em.getText();
+    String email = em.getText().trim();
+    char[] passwordChars = ps.getPassword();
 
-String email = em.getText();
-char[] password = ps.getPassword();   // CORRECT way
-
-config con = new config();
-
-String[] loginDetails = con.getLoginDetails(email, password);
-String status = loginDetails[0];
-String type = loginDetails[1];
-
-if (status == null) {
-    JOptionPane.showMessageDialog(this, 
-        "Login failed! Incorrect email or password.", 
-        "Error", 
-        JOptionPane.ERROR_MESSAGE);
-    return;
-}
-
-if (status.equalsIgnoreCase("Pending")) {
-    JOptionPane.showMessageDialog(this, 
-        "Your account is still pending approval. Please wait for admin confirmation.", 
-        "Pending", 
-        JOptionPane.INFORMATION_MESSAGE);
-    return;
-}
-
-if (status.equalsIgnoreCase("Approved")) {
-    JOptionPane.showMessageDialog(this, 
-        "Login successful! Welcome " + email, 
-        "Welcome", 
-        JOptionPane.INFORMATION_MESSAGE);
-
-    if (type.equalsIgnoreCase("Admin")) {
-        new admin.accountmanager().setVisible(true);
-    } else if (type.equalsIgnoreCase("User")) {
-        new user.userprofile().setVisible(true);
-    } else {
-        JOptionPane.showMessageDialog(this, 
-            "Unknown user type!", 
-            "Error", 
-            JOptionPane.ERROR_MESSAGE);
+    if (email.isEmpty() || passwordChars.length == 0) {
+        JOptionPane.showMessageDialog(this,
+                "Please fill in all fields",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        return;
     }
 
-    this.dispose();
-}
+    config con = new config();
+    String[] loginDetails = con.getLoginDetails(email, passwordChars);
+    String status = loginDetails[0];
+    String type = loginDetails[1];
 
+    if (status == null || type == null) {
+        JOptionPane.showMessageDialog(this,
+                "Login failed! Incorrect email or password.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
+    if (status.equalsIgnoreCase("Pending")) {
+        JOptionPane.showMessageDialog(this,
+                "Your account is still pending approval. Please wait for admin confirmation.",
+                "Pending",
+                JOptionPane.INFORMATION_MESSAGE);
+        return;
+    }
 
+    if (status.equalsIgnoreCase("Approved")) {
+        // Set session info
+        Session session = Session.getInstance();
+        session.setEmail(email);
+        session.setType(type);
 
+        // Important: set loggedInEmail in config before fetching profile
+        config.loggedInEmail = email;
+        String[] profile = con.getLoggedInUserProfile();
+        if (profile[0] != null && profile[1] != null) {
+            session.setFirstName(profile[0]);
+            session.setLastName(profile[1]);
+        }
 
+        JOptionPane.showMessageDialog(this,
+                "Login successful! Welcome " + session.getFullName(),
+                "Welcome",
+                JOptionPane.INFORMATION_MESSAGE);
+
+        if (type.equalsIgnoreCase("Admin")) {
+            new admin.accountmanager().setVisible(true);
+        } else if (type.equalsIgnoreCase("User")) {
+            new user.userprofile().setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Unknown user type!",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        this.dispose();
+    }
+
+    java.util.Arrays.fill(passwordChars, '\0');
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -250,11 +259,13 @@ if (status.equalsIgnoreCase("Approved")) {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField em;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;

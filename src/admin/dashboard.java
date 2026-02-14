@@ -1,5 +1,6 @@
 package admin;
 
+import config.Session;
 import config.config;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -7,7 +8,13 @@ import elitegym.login;
 
 public class dashboard extends javax.swing.JFrame {
    
-    public dashboard() {
+    public dashboard(){
+        
+        if (!Session.getInstance().isLoggedIn()) {
+        new login().setVisible(true);
+        this.dispose();
+        return;
+    }
         initComponents();
         nav1.setOpaque(true);
         nav2.setOpaque(true);
@@ -141,7 +148,7 @@ public class dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_nav2MouseEntered
 
     private void logoutMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseExited
-        logout.setBackground(new Color (30,30,30));
+        logout.setBackground(new Color (240, 240, 240));
     }//GEN-LAST:event_logoutMouseExited
 
     private void nav2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav2MouseExited
@@ -153,6 +160,7 @@ public class dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_logoutMouseEntered
 
     private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
+        Session.getInstance().clearSession();
         login lan = new login();
         lan.setVisible(true);
         this.dispose();

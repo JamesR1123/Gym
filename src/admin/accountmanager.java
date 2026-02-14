@@ -1,16 +1,46 @@
 package admin;
 
+import config.Session;
 import config.config;
 import java.awt.Color;
 import java.awt.Cursor;
 import elitegym.login;
+import javax.swing.table.DefaultTableModel;
 
 
 public class accountmanager extends javax.swing.JFrame {
    
-    public accountmanager() {
+    public accountmanager(){
+        
+        if (!Session.getInstance().isLoggedIn()) {
+        new login().setVisible(true);
+        this.dispose();
+        return;
+    }
         initComponents();
+        
         getUsersData();
+        
+        javax.swing.table.TableRowSorter sorter =
+        new javax.swing.table.TableRowSorter(usertable.getModel());
+
+        usertable.setRowSorter(sorter);
+
+        jTextField1.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+    public void insertUpdate(javax.swing.event.DocumentEvent e) { search(); }
+    public void removeUpdate(javax.swing.event.DocumentEvent e) { search(); }
+    public void changedUpdate(javax.swing.event.DocumentEvent e) { search(); }
+
+    private void search() {
+        String text = jTextField1.getText();
+        if (text.trim().length() == 0) {
+            sorter.setRowFilter(null);
+        } else {
+            sorter.setRowFilter(javax.swing.RowFilter.regexFilter("(?i)" + text));
+        }
+    }
+});
+        usertable.setDefaultEditor(Object.class, null);
         nav1.setOpaque(true);
         nav2.setOpaque(true);
         logout.setOpaque(true);
@@ -18,16 +48,14 @@ public class accountmanager extends javax.swing.JFrame {
         
         nav1.setCursor(new Cursor(Cursor.HAND_CURSOR));
         nav2.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        logout.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
-  
-    
+        logout.setCursor(new Cursor(Cursor.HAND_CURSOR));   
     }
+    
+
     
     void getUsersData(){
     config con = new config();
-    String sql = "SELECT * FROM tbl_accounts";
-    con.displayData(sql, usertable);
+    con.getAllUsers(usertable);
     
     }
 
@@ -36,8 +64,6 @@ public class accountmanager extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane2 = new javax.swing.JScrollPane();
-        usertable = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         nav1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
@@ -49,24 +75,17 @@ public class accountmanager extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        usertable = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        usertable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane2.setViewportView(usertable);
-
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 230, 780, 450));
 
         jPanel2.setBackground(new java.awt.Color(30, 30, 30));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -114,6 +133,9 @@ public class accountmanager extends javax.swing.JFrame {
 
         nav2.setBackground(new java.awt.Color(30, 30, 30));
         nav2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nav2MouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 nav2MouseEntered(evt);
             }
@@ -161,7 +183,67 @@ public class accountmanager extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, 780, 90));
 
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        usertable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(usertable);
+
+        jPanel3.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 800, 450));
+
+        jButton1.setText("Add User");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, -1, -1));
+
+        jButton2.setText("Update User");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, -1, -1));
+
+        jButton3.setText("Delete User");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        jPanel3.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 30, -1, -1));
+
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+        jPanel3.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 30, 260, -1));
+
+        jButton4.setText("Refresh");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        jPanel3.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 30, -1, -1));
+
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 150, 820, 530));
+
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void nav2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav2MouseEntered
@@ -169,7 +251,7 @@ public class accountmanager extends javax.swing.JFrame {
     }//GEN-LAST:event_nav2MouseEntered
 
     private void logoutMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseExited
-        logout.setBackground(new Color (0, 0, 0));
+        logout.setBackground(new Color (240, 240, 240));
     }//GEN-LAST:event_logoutMouseExited
 
     private void nav2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav2MouseExited
@@ -181,6 +263,7 @@ public class accountmanager extends javax.swing.JFrame {
     }//GEN-LAST:event_logoutMouseEntered
 
     private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
+        Session.getInstance().clearSession();
         login lan = new login();
         lan.setVisible(true);
         this.dispose();
@@ -214,6 +297,107 @@ public class accountmanager extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_nav3MouseClicked
 
+    private void nav2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav2MouseClicked
+        accountmanager acc = new accountmanager();
+        acc.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_nav2MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    String fname = javax.swing.JOptionPane.showInputDialog("First Name:");
+    String lname = javax.swing.JOptionPane.showInputDialog("Last Name:");
+    String email = javax.swing.JOptionPane.showInputDialog("Email:");
+    String phone = javax.swing.JOptionPane.showInputDialog("Phone:");
+    String birthdate = javax.swing.JOptionPane.showInputDialog("Birthdate (YYYY-MM-DD):");
+    String gender = javax.swing.JOptionPane.showInputDialog("Gender:");
+    String password = javax.swing.JOptionPane.showInputDialog("Password:");
+    String type = javax.swing.JOptionPane.showInputDialog("Type (Admin/User):");
+
+    if (fname == null || lname == null || email == null || phone == null ||
+        birthdate == null || gender == null || password == null || type == null) {
+        return;
+    }
+
+    config con = new config();
+    boolean success = con.addUser(
+            fname,
+            lname,
+            email,
+            phone,
+            birthdate,
+            gender,
+            password,
+            "Approved",
+            type
+    );
+
+    if (success) {
+        javax.swing.JOptionPane.showMessageDialog(this, "User Added!");
+        getUsersData();
+    } else {
+        javax.swing.JOptionPane.showMessageDialog(this, "Error adding user.");
+    }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    int row = usertable.getSelectedRow();
+
+    if (row == -1) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Please select a user first.");
+        return;
+    }
+
+    int confirm = javax.swing.JOptionPane.showConfirmDialog(
+            this,
+            "Are you sure you want to delete this user?",
+            "Confirm Delete",
+            javax.swing.JOptionPane.YES_NO_OPTION
+    );
+
+    if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+
+        String email = usertable.getValueAt(row, 2).toString(); 
+        // adjust index if needed (depends on your column order)
+
+        config con = new config();
+        con.deleteUser(email);
+
+        javax.swing.JOptionPane.showMessageDialog(this, "User deleted successfully!");
+        getUsersData();
+    }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    int row = usertable.getSelectedRow();
+
+    if (row == -1) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Select a user first.");
+        return;
+    }
+
+    String email = usertable.getValueAt(row, 2).toString();
+
+    String newType = javax.swing.JOptionPane.showInputDialog("New Type (Admin/User):");
+    String newStatus = javax.swing.JOptionPane.showInputDialog("New Status (Approved/Pending):");
+
+    config con = new config();
+    boolean success = con.updateUserByEmail(email, newType, newStatus);
+
+    if (success) {
+        javax.swing.JOptionPane.showMessageDialog(this, "User Updated!");
+        getUsersData();
+    }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        getUsersData(); 
+        javax.swing.JOptionPane.showMessageDialog(this, "Table refreshed!");
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     
     public static void main(String args[]) {
         
@@ -242,6 +426,10 @@ public class accountmanager extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -249,7 +437,9 @@ public class accountmanager extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JPanel logout;
     private javax.swing.JPanel nav1;
     private javax.swing.JPanel nav2;

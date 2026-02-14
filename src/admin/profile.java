@@ -1,5 +1,6 @@
 package admin;
 
+import config.Session;
 import config.config;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -8,15 +9,24 @@ import elitegym.login;
 public class profile extends javax.swing.JFrame {
    
     public void loadLoggedInUserProfile() {
-    fullname.setText(config.loggedInFullname);
-    email.setText(config.loggedInEmail);
-    type.setText("Admin");
+
+    config con = new config(); 
+    String[] user = con.getLoggedInUserProfile();
+
+    fullname.setText(user[0]+ " " + user[1]); // fullname
+    email.setText(user[2]);    // email
+    type.setText(user[3]);     // type
 }
 
 
 
-
-    public profile() {
+    public profile(){
+        
+        if (!Session.getInstance().isLoggedIn()) {
+        new login().setVisible(true);
+        this.dispose();
+        return;
+    }
         initComponents();
         
         loadLoggedInUserProfile();
@@ -192,7 +202,7 @@ public class profile extends javax.swing.JFrame {
     }//GEN-LAST:event_nav2MouseEntered
 
     private void logoutMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseExited
-        logout.setBackground(new Color (30,30,30));
+        logout.setBackground(new Color (240, 240, 240));
     }//GEN-LAST:event_logoutMouseExited
 
     private void nav2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav2MouseExited
@@ -204,13 +214,14 @@ public class profile extends javax.swing.JFrame {
     }//GEN-LAST:event_logoutMouseEntered
 
     private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
+        Session.getInstance().clearSession();
         login lan = new login();
         lan.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_logoutMouseClicked
 
     private void nav1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav1MouseExited
-        nav1.setBackground(new Color(0, 0, 0));
+        nav1.setBackground(new Color(30, 30, 30));
     }//GEN-LAST:event_nav1MouseExited
 
     private void nav1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav1MouseEntered
@@ -218,14 +229,14 @@ public class profile extends javax.swing.JFrame {
     }//GEN-LAST:event_nav1MouseEntered
 
     private void nav1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav1MouseClicked
-        profile db = new profile();
+        dashboard db = new dashboard();
         db.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_nav1MouseClicked
 
     private void nav2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav2MouseClicked
-        accountmanager us = new accountmanager();
-        us.setVisible(true);
+        profile pro = new profile();
+        pro.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_nav2MouseClicked
 

@@ -17,9 +17,9 @@ public class userprofile extends javax.swing.JFrame {
     config con = new config(); 
     String[] user = con.getLoggedInUserProfile();
 
-    fullname.setText(user[0]); // fullname
-    email.setText(user[1]);    // email
-    type.setText(user[2]);     // type
+    fullname.setText(user[0]+ " " + user[1]); // fullname
+    email.setText(user[2]);    // email
+    type.setText(user[3]);     // type
 }
     
     @SuppressWarnings("unchecked")
