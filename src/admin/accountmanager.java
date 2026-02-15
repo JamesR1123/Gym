@@ -83,6 +83,9 @@ public class accountmanager extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         logout = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
+        nav4 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
@@ -125,9 +128,9 @@ public class accountmanager extends javax.swing.JFrame {
 
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Dashboard");
-        nav1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
+        nav1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
-        jPanel2.add(nav1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 110, 120, 40));
+        jPanel2.add(nav1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 130, 170, 40));
 
         nav3.setBackground(new java.awt.Color(30, 30, 30));
         nav3.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -147,7 +150,7 @@ public class accountmanager extends javax.swing.JFrame {
         jLabel6.setText("Profile");
         nav3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
-        jPanel2.add(nav3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 260, 150, 40));
+        jPanel2.add(nav3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 340, 170, 40));
 
         nav2.setBackground(new java.awt.Color(30, 30, 30));
         nav2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -165,9 +168,9 @@ public class accountmanager extends javax.swing.JFrame {
 
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Account Manager");
-        nav2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
+        nav2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
-        jPanel2.add(nav2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 190, 150, 40));
+        jPanel2.add(nav2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 170, 40));
 
         logout.setBackground(new java.awt.Color(255, 255, 255));
         logout.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
@@ -191,7 +194,31 @@ public class accountmanager extends javax.swing.JFrame {
 
         jPanel2.add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 630, 190, 50));
 
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 230, 700));
+        nav4.setBackground(new java.awt.Color(30, 30, 30));
+        nav4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nav4MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                nav4MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                nav4MouseExited(evt);
+            }
+        });
+        nav4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText("Gym Sevices");
+        nav4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+
+        jPanel2.add(nav4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 270, 170, 40));
+
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dashBlogo.png"))); // NOI18N
+        jPanel2.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(-110, 20, 300, 110));
+
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 230, 700));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -199,7 +226,7 @@ public class accountmanager extends javax.swing.JFrame {
         jLabel13.setText("Accounts Manager");
         jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 300, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, 820, 60));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, 810, 60));
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -217,7 +244,7 @@ public class accountmanager extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(usertable);
 
-        jPanel3.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 800, 450));
+        jPanel3.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 790, 370));
 
         jButton1.setText("Add User");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -248,7 +275,7 @@ public class accountmanager extends javax.swing.JFrame {
                 jTextField1ActionPerformed(evt);
             }
         });
-        jPanel3.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 30, 260, -1));
+        jPanel3.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 30, 250, -1));
 
         jButton4.setText("Refresh");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -261,7 +288,7 @@ public class accountmanager extends javax.swing.JFrame {
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/search.png"))); // NOI18N
         jPanel3.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 30, -1, 20));
 
-        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 230, 820, 450));
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 230, 810, 450));
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -274,13 +301,11 @@ public class accountmanager extends javax.swing.JFrame {
 
         PA.setFont(new java.awt.Font("Tahoma", 1, 25)); // NOI18N
         PA.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        PA.setText("3");
         PA.setToolTipText("");
         jPanel4.add(PA, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 60, 50, 40));
 
         TA.setFont(new java.awt.Font("Tahoma", 1, 25)); // NOI18N
         TA.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        TA.setText("3");
         jPanel4.add(TA, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 60, 50, 40));
 
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/totalaccounts.png"))); // NOI18N
@@ -289,14 +314,14 @@ public class accountmanager extends javax.swing.JFrame {
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/pendingaccounts.png"))); // NOI18N
         jPanel4.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 50, 60, 50));
 
-        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 90, 820, 120));
+        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 90, 810, 120));
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void nav2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav2MouseEntered
-        nav2.setBackground(new Color (255, 249, 196));
+      
     }//GEN-LAST:event_nav2MouseEntered
 
     private void logoutMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseExited
@@ -304,7 +329,7 @@ public class accountmanager extends javax.swing.JFrame {
     }//GEN-LAST:event_logoutMouseExited
 
     private void nav2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav2MouseExited
-        nav2.setBackground(new Color(30,30,30));
+       
     }//GEN-LAST:event_nav2MouseExited
 
     private void logoutMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseEntered
@@ -347,9 +372,7 @@ public class accountmanager extends javax.swing.JFrame {
     }//GEN-LAST:event_nav3MouseClicked
 
     private void nav2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav2MouseClicked
-        accountmanager acc = new accountmanager();
-        acc.setVisible(true);
-        this.dispose();
+        
     }//GEN-LAST:event_nav2MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -451,6 +474,20 @@ public class accountmanager extends javax.swing.JFrame {
         javax.swing.JOptionPane.showMessageDialog(this, "Table refreshed!");
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void nav4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav4MouseClicked
+        gymServices gy = new gymServices();
+        gy.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_nav4MouseClicked
+
+    private void nav4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav4MouseEntered
+        nav4.setBackground(new Color (255, 249, 196));
+    }//GEN-LAST:event_nav4MouseEntered
+
+    private void nav4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav4MouseExited
+        nav4.setBackground(new Color(30,30,30));
+    }//GEN-LAST:event_nav4MouseExited
+
     
     public static void main(String args[]) {
         
@@ -486,6 +523,8 @@ public class accountmanager extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -505,6 +544,7 @@ public class accountmanager extends javax.swing.JFrame {
     private javax.swing.JPanel nav1;
     private javax.swing.JPanel nav2;
     private javax.swing.JPanel nav3;
+    private javax.swing.JPanel nav4;
     private javax.swing.JTable usertable;
     // End of variables declaration//GEN-END:variables
 }
