@@ -422,4 +422,44 @@ public boolean updateUserByEmail(String email, String type, String status) {
     }
 }
 
+public int getTotalAccounts() {
+    int total = 0;
+
+    String sql = "SELECT COUNT(*) FROM tbl_accounts";
+
+    try (Connection conn = connectDB();
+         PreparedStatement pst = conn.prepareStatement(sql);
+         ResultSet rs = pst.executeQuery()) {
+
+        if (rs.next()) {
+            total = rs.getInt(1);
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Error counting total accounts: " + e.getMessage());
+    }
+
+    return total;
+}
+
+public int getPendingAccounts() {
+    int pending = 0;
+
+    String sql = "SELECT COUNT(*) FROM tbl_accounts WHERE U_status = 'Pending'";
+
+    try (Connection conn = connectDB();
+         PreparedStatement pst = conn.prepareStatement(sql);
+         ResultSet rs = pst.executeQuery()) {
+
+        if (rs.next()) {
+            pending = rs.getInt(1);
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Error counting pending accounts: " + e.getMessage());
+    }
+
+    return pending;
+}
+
     }

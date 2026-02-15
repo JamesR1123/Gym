@@ -18,9 +18,10 @@ public class accountmanager extends javax.swing.JFrame {
         return;
     }
         initComponents();
-        
         getUsersData();
-        
+        loadAccountStatistics();
+
+    
         javax.swing.table.TableRowSorter sorter =
         new javax.swing.table.TableRowSorter(usertable.getModel());
 
@@ -51,6 +52,15 @@ public class accountmanager extends javax.swing.JFrame {
         logout.setCursor(new Cursor(Cursor.HAND_CURSOR));   
     }
     
+    void loadAccountStatistics() {
+        config con = new config();
+
+        int total = con.getTotalAccounts();
+        int pending = con.getPendingAccounts();
+
+        TA.setText(String.valueOf(total));
+        PA.setText(String.valueOf(pending));
+}
 
     
     void getUsersData(){
@@ -83,6 +93,14 @@ public class accountmanager extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
         jButton4 = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        PA = new javax.swing.JLabel();
+        TA = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -181,7 +199,7 @@ public class accountmanager extends javax.swing.JFrame {
         jLabel13.setText("Accounts Manager");
         jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 300, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, 780, 90));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, 820, 60));
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -238,9 +256,40 @@ public class accountmanager extends javax.swing.JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 30, -1, -1));
+        jPanel3.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 30, -1, -1));
 
-        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 150, 820, 530));
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/search.png"))); // NOI18N
+        jPanel3.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 30, -1, 20));
+
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 230, 820, 450));
+
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setText("Pending Accounts");
+        jPanel4.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 20, -1, -1));
+
+        jLabel5.setText("Total Accounts");
+        jPanel4.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 20, -1, -1));
+
+        PA.setFont(new java.awt.Font("Tahoma", 1, 25)); // NOI18N
+        PA.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        PA.setText("3");
+        PA.setToolTipText("");
+        jPanel4.add(PA, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 60, 50, 40));
+
+        TA.setFont(new java.awt.Font("Tahoma", 1, 25)); // NOI18N
+        TA.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        TA.setText("3");
+        jPanel4.add(TA, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 60, 50, 40));
+
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/totalaccounts.png"))); // NOI18N
+        jPanel4.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 50, 60, 50));
+
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/pendingaccounts.png"))); // NOI18N
+        jPanel4.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 50, 60, 50));
+
+        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 90, 820, 120));
 
         pack();
         setLocationRelativeTo(null);
@@ -334,6 +383,7 @@ public class accountmanager extends javax.swing.JFrame {
     if (success) {
         javax.swing.JOptionPane.showMessageDialog(this, "User Added!");
         getUsersData();
+        loadAccountStatistics();
     } else {
         javax.swing.JOptionPane.showMessageDialog(this, "Error adding user.");
     }
@@ -364,6 +414,7 @@ public class accountmanager extends javax.swing.JFrame {
 
         javax.swing.JOptionPane.showMessageDialog(this, "User deleted successfully!");
         getUsersData();
+        loadAccountStatistics();
     }
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -390,11 +441,13 @@ public class accountmanager extends javax.swing.JFrame {
     if (success) {
         javax.swing.JOptionPane.showMessageDialog(this, "User Updated!");
         getUsersData();
+        loadAccountStatistics();
     }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         getUsersData(); 
+        loadAccountStatistics();
         javax.swing.JOptionPane.showMessageDialog(this, "Table refreshed!");
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -426,18 +479,26 @@ public class accountmanager extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel PA;
+    private javax.swing.JLabel TA;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JPanel logout;
