@@ -2,9 +2,14 @@ package elitegym;
 
 
 import config.config;
+import static java.awt.SystemColor.text;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 
 
 public class register extends javax.swing.JFrame {
@@ -13,6 +18,21 @@ public class register extends javax.swing.JFrame {
     
     public register() {
         initComponents();
+        
+        birthdate.addKeyListener(new java.awt.event.KeyAdapter() {
+        public void keyReleased(java.awt.event.KeyEvent evt) {
+        formatBirthdate();
+    }
+});
+        pass1.setEchoChar('*');
+        cpass.setEchoChar('*');
+
+        // Show eye visible first
+        showPass.setVisible(true);
+        hidePass.setVisible(false);
+
+        cshowPass.setVisible(true);
+        chidePass.setVisible(false);
         genderGroup = new ButtonGroup();
         genderGroup.add(jRadioButton1);
         genderGroup.add(jRadioButton2);
@@ -20,6 +40,48 @@ public class register extends javax.swing.JFrame {
         // Set default selection
         jRadioButton1.setSelected(true);
     }
+    
+    private void formatBirthdate() {
+        
+
+        String text = birthdate.getText().replaceAll("[^0-9]", "");
+        
+        if (text.length() > 8) {
+        text = text.substring(0, 8);
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        if (text.length() > 0) {
+            sb.append(text.substring(0, Math.min(4, text.length())));
+        }
+
+        if (text.length() >= 5) {
+            sb.append("/");
+            sb.append(text.substring(4, Math.min(6, text.length())));
+        }
+
+        if (text.length() >= 7) {
+            sb.append("/");
+            sb.append(text.substring(6, Math.min(8, text.length())));
+        }
+
+        birthdate.setText(sb.toString());
+}
+    
+    private boolean isValidDate(String dateStr) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        formatter = formatter.withResolverStyle(java.time.format.ResolverStyle.STRICT);
+
+        try {
+            LocalDate.parse(dateStr, formatter);
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+}
+
+
 
     
     @SuppressWarnings("unchecked")
@@ -33,6 +95,10 @@ public class register extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
+        chidePass = new javax.swing.JLabel();
+        hidePass = new javax.swing.JLabel();
+        showPass = new javax.swing.JLabel();
+        cshowPass = new javax.swing.JLabel();
         cpass = new javax.swing.JPasswordField();
         phone = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -51,6 +117,8 @@ public class register extends javax.swing.JFrame {
         email2 = new javax.swing.JTextField();
         type = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
+        securityQuestion = new javax.swing.JComboBox<>();
+        securityAnswer = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -97,6 +165,42 @@ public class register extends javax.swing.JFrame {
         jSeparator1.setPreferredSize(new java.awt.Dimension(50, 50));
         jPanel2.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 70, 90, 10));
 
+        chidePass.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        chidePass.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/blind-gray.png"))); // NOI18N
+        chidePass.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                chidePassMouseClicked(evt);
+            }
+        });
+        jPanel2.add(chidePass, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 650, 50, 50));
+
+        hidePass.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        hidePass.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/blind-gray.png"))); // NOI18N
+        hidePass.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                hidePassMouseClicked(evt);
+            }
+        });
+        jPanel2.add(hidePass, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 560, 50, 50));
+
+        showPass.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        showPass.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/eye-gray.png"))); // NOI18N
+        showPass.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                showPassMouseClicked(evt);
+            }
+        });
+        jPanel2.add(showPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 560, 50, 50));
+
+        cshowPass.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        cshowPass.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/eye-gray.png"))); // NOI18N
+        cshowPass.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cshowPassMouseClicked(evt);
+            }
+        });
+        jPanel2.add(cshowPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 650, 50, 50));
+
         cpass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cpassActionPerformed(evt);
@@ -114,7 +218,7 @@ public class register extends javax.swing.JFrame {
 
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Sex");
-        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 440, 50, -1));
+        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 330, 50, -1));
 
         birthdate.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
         birthdate.addActionListener(new java.awt.event.ActionListener() {
@@ -153,7 +257,7 @@ public class register extends javax.swing.JFrame {
                 jRadioButton1ActionPerformed(evt);
             }
         });
-        jPanel2.add(jRadioButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 470, -1, -1));
+        jPanel2.add(jRadioButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 360, -1, -1));
 
         jRadioButton2.setBackground(new java.awt.Color(0, 0, 0));
         jRadioButton2.setForeground(new java.awt.Color(255, 255, 255));
@@ -163,11 +267,11 @@ public class register extends javax.swing.JFrame {
                 jRadioButton2ActionPerformed(evt);
             }
         });
-        jPanel2.add(jRadioButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 470, -1, -1));
+        jPanel2.add(jRadioButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 360, -1, -1));
 
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Type");
-        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 330, -1, -1));
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 430, -1, -1));
 
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Phone Number");
@@ -203,11 +307,21 @@ public class register extends javax.swing.JFrame {
         jPanel2.add(email2, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 230, 200, 40));
 
         type.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "(Choose Account Type)", "Member", "Trainer" }));
-        jPanel2.add(type, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 350, 200, 40));
+        jPanel2.add(type, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 450, 200, 40));
 
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
         jLabel10.setText("Email Address");
         jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 210, -1, -1));
+
+        securityQuestion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "(Security Question)", "What is your pet’s name?", "What is your favorite color?", "What city were you born in?" }));
+        jPanel2.add(securityQuestion, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 420, 200, 40));
+
+        securityAnswer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                securityAnswerActionPerformed(evt);
+            }
+        });
+        jPanel2.add(securityAnswer, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 470, 200, 40));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 630, 830));
 
@@ -225,6 +339,13 @@ public class register extends javax.swing.JFrame {
         String emailAddress = email2.getText().trim();
         String password = new String(pass1.getPassword());       // Convert char[] to String
         String confirmPassword = new String(cpass.getPassword()); // Convert char[] to String
+        String question = securityQuestion.getSelectedItem().toString().trim();
+        String answer = securityAnswer.getText().trim();
+        
+        if (!isValidDate(birth)) {
+        JOptionPane.showMessageDialog(this, "Invalid birthdate! Use YYYY/MM/DD");
+        return;
+        }
 
         // Get selected gender
         String gender = jRadioButton1.isSelected() ? "Male" : "Female";
@@ -240,7 +361,7 @@ public class register extends javax.swing.JFrame {
 
         // Validate register using String passwords
         if (con.validateRegister(firstName, lastName, emailAddress, phoneNumber, birth,
-                password, confirmPassword, gender, accountType)) {
+                password, confirmPassword, gender, accountType, question, answer)) {
             JOptionPane.showMessageDialog(this, "Registration successful!");
             new login().setVisible(true);
             this.dispose();
@@ -297,6 +418,34 @@ public class register extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_email2ActionPerformed
 
+    private void showPassMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showPassMouseClicked
+        pass1.setEchoChar((char) 0);   // show password
+        showPass.setVisible(false);
+        hidePass.setVisible(true);
+    }//GEN-LAST:event_showPassMouseClicked
+
+    private void hidePassMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hidePassMouseClicked
+        pass1.setEchoChar('*');        // hide password
+        showPass.setVisible(true);
+        hidePass.setVisible(false);
+    }//GEN-LAST:event_hidePassMouseClicked
+
+    private void cshowPassMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cshowPassMouseClicked
+        cpass.setEchoChar((char) 0);   // show confirm password
+        cshowPass.setVisible(false);
+        chidePass.setVisible(true);
+    }//GEN-LAST:event_cshowPassMouseClicked
+
+    private void chidePassMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chidePassMouseClicked
+        cpass.setEchoChar('*');        // hide confirm password
+        cshowPass.setVisible(true);
+        chidePass.setVisible(false);
+    }//GEN-LAST:event_chidePassMouseClicked
+
+    private void securityAnswerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_securityAnswerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_securityAnswerActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -334,9 +483,12 @@ public class register extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField birthdate;
+    private javax.swing.JLabel chidePass;
     private javax.swing.JPasswordField cpass;
+    private javax.swing.JLabel cshowPass;
     private javax.swing.JTextField email2;
     private javax.swing.JTextField fname;
+    private javax.swing.JLabel hidePass;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -357,6 +509,9 @@ public class register extends javax.swing.JFrame {
     private javax.swing.JLabel login;
     private javax.swing.JPasswordField pass1;
     private javax.swing.JTextField phone;
+    private javax.swing.JTextField securityAnswer;
+    private javax.swing.JComboBox<String> securityQuestion;
+    private javax.swing.JLabel showPass;
     private javax.swing.JComboBox<String> type;
     // End of variables declaration//GEN-END:variables
 }

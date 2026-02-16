@@ -20,8 +20,9 @@ public class gymServices extends javax.swing.JFrame {
         this.dispose();
         return;
     }
+        
         initComponents();
-        loadServices();
+        loadServices();      // load DB data after table exists
        
         nav1.setOpaque(true);
         nav2.setOpaque(true);
@@ -32,66 +33,52 @@ public class gymServices extends javax.swing.JFrame {
         nav2.setCursor(new Cursor(Cursor.HAND_CURSOR));
         logout.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-        servicetable.setModel(new javax.swing.table.DefaultTableModel(
-        new Object [][] {},
-        new String [] {
-        "ID", "Service Name", "Description", "Duration", "Price", "Status"
-    }
-));
-  
     
     }
     
     
     
     public void loadServices() {
-    try {
-        Connection conn = config.connectDB();
-        String sql = "SELECT * FROM gym_services";
-        PreparedStatement pst = conn.prepareStatement(sql);
-        ResultSet rs = pst.executeQuery();
+        try (Connection conn = config.connectDB();
+             PreparedStatement pst = conn.prepareStatement("SELECT * FROM gym_services");
+             ResultSet rs = pst.executeQuery()) {
 
-        DefaultTableModel model = (DefaultTableModel) servicetable.getModel();
-        model.setRowCount(0);
+            DefaultTableModel model = (DefaultTableModel) servicetable.getModel();
+            model.setRowCount(0); // clear existing rows
 
-        int total = 0;
-        int active = 0;
-        int inactive = 0;
+            int total = 0, active = 0, inactive = 0;
 
-        while (rs.next()) {
-            total++;
+            while (rs.next()) {
+                total++;
+                String status = rs.getString("status");
+                if (status.equalsIgnoreCase("Active")) active++;
+                else inactive++;
 
-            String status = rs.getString("status");
-            if (status.equalsIgnoreCase("Active")) {
-                active++;
-            } else {
-                inactive++;
+                model.addRow(new Object[]{
+                    rs.getInt("service_id"),
+                    rs.getString("service_name"),
+                    rs.getString("description"),
+                    rs.getString("duration"),
+                    rs.getDouble("price"),
+                    status
+                });
             }
 
-            model.addRow(new Object[]{
-                rs.getInt("service_id"),
-                rs.getString("service_name"),
-                rs.getString("description"),
-                rs.getString("duration"),
-                rs.getDouble("price"),
-                status
-            });
+            // Update summary labels
+            label.setText("Total Services: " + total);
+            label2.setText("Active Services: " + active);
+            label3.setText("Inactive Services: " + inactive);
+
+            Tservise.setText(String.valueOf(total));
+            Aservice.setText(String.valueOf(active));
+            Iservices.setText(String.valueOf(inactive));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(this, "Error loading services: " + e.getMessage());
         }
-
-        // Update the label texts
-        label.setText("Total Services: " + total);
-        label2.setText("Active Services: " + active);
-        label3.setText("Inactive Services: " + inactive);
-
-        // Also update the big number labels if you want
-        Tservise.setText(String.valueOf(total));
-        Aservice.setText(String.valueOf(active));
-        Iservices.setText(String.valueOf(inactive));
-
-    } catch (Exception e) {
-        e.printStackTrace();
     }
-}
+
 
    
    

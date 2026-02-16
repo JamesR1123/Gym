@@ -1,6 +1,8 @@
 package member;
 
+import config.Session;
 import config.config;
+import elitegym.login;
 import java.awt.Color;
 
 
@@ -37,6 +39,8 @@ public class memberProfile extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         nav3 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
+        logout = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         fullname = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -46,6 +50,8 @@ public class memberProfile extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(1010, 680));
+        setPreferredSize(new java.awt.Dimension(1010, 680));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBackground(new java.awt.Color(30, 30, 30));
@@ -139,6 +145,26 @@ public class memberProfile extends javax.swing.JFrame {
 
         jPanel1.add(nav3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 170, 40));
 
+        logout.setBackground(new java.awt.Color(255, 255, 255));
+        logout.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        logout.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                logoutMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                logoutMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                logoutMouseExited(evt);
+            }
+        });
+        logout.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel10.setText("Logout");
+        logout.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, -1, -1));
+
+        jPanel1.add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 630, 190, 50));
+
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 230, 700));
         jPanel1.getAccessibleContext().setAccessibleName("");
 
@@ -171,7 +197,7 @@ public class memberProfile extends javax.swing.JFrame {
         jLabel2.setText("Personal Information");
         jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 120, -1, -1));
 
-        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 30, 690, 590));
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 30, 690, 630));
 
         pack();
         setLocationRelativeTo(null);
@@ -231,6 +257,21 @@ public class memberProfile extends javax.swing.JFrame {
         nav4.setBackground(new Color (30,30,30));
     }//GEN-LAST:event_nav4MouseExited
 
+    private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
+        Session.getInstance().clearSession();
+        login lan = new login();
+        lan.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_logoutMouseClicked
+
+    private void logoutMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseEntered
+        logout.setBackground(new Color(255, 0, 0));
+    }//GEN-LAST:event_logoutMouseEntered
+
+    private void logoutMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseExited
+        logout.setBackground(new Color (240, 240, 240));
+    }//GEN-LAST:event_logoutMouseExited
+
     
     public static void main(String args[]) {
        
@@ -268,6 +309,7 @@ public class memberProfile extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel email;
     private javax.swing.JLabel fullname;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -279,6 +321,7 @@ public class memberProfile extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel logout;
     private javax.swing.JPanel nav1;
     private javax.swing.JPanel nav2;
     private javax.swing.JPanel nav3;

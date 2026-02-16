@@ -183,89 +183,94 @@ public class config {
     }
 
     // ================= REGISTER =================
-    public boolean validateRegister(
-            String firstName,
-            String lastName,
-            String email,
-            String phone,
-            String birthdate,
-            String password,
-            String confirm,
-            String gender,
-            String accountType
-    ) {
+public boolean validateRegister(
+        String firstName,
+        String lastName,
+        String email,
+        String phone,
+        String birthdate,
+        String password,
+        String confirm,
+        String gender,
+        String accountType,
+        String securityQuestion,
+        String securityAnswer
+) {
 
-        // ===== CHECK EMPTY FIELDS =====
-        if (firstName.trim().isEmpty() || lastName.trim().isEmpty() || email.trim().isEmpty()
-                || phone.trim().isEmpty() || birthdate.trim().isEmpty()
-                || password.isEmpty() || confirm.isEmpty() || gender.trim().isEmpty()
-                || accountType.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(null,
-                    "Please fill in all fields",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        // ===== PASSWORD VALIDATION =====
-        if (!password.equals(confirm)) {
-            JOptionPane.showMessageDialog(null,
-                    "Passwords do not match",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        if (password.length() < 6) {
-            JOptionPane.showMessageDialog(null,
-                    "Password must be at least 6 characters",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        // ===== CHECK IF EMAIL EXISTS =====
-        String sqlCheck = "SELECT * FROM tbl_accounts WHERE U_email=?";
-
-        try (Connection conn = connectDB();
-             PreparedStatement psCheck = conn.prepareStatement(sqlCheck)) {
-
-            psCheck.setString(1, email);
-            ResultSet rs = psCheck.executeQuery();
-
-            if (rs.next()) {
-                JOptionPane.showMessageDialog(null,
-                        "Email already exists",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-
-            // ===== INSERT NEW USER =====
-            String sqlInsert = "INSERT INTO tbl_accounts(U_firstname, U_lastname, U_email, U_phone, U_birthdate, U_gender, U_password, U_status, U_type) VALUES(?,?,?,?,?,?,?,?,?)";
-
-            try (PreparedStatement psInsert = conn.prepareStatement(sqlInsert)) {
-                psInsert.setString(1, firstName);
-                psInsert.setString(2, lastName);
-                psInsert.setString(3, email);
-                psInsert.setString(4, phone);
-                psInsert.setString(5, birthdate);
-                psInsert.setString(6, gender);
-                psInsert.setString(7, password);
-                psInsert.setString(8, "Pending");      // New accounts always Pending
-                psInsert.setString(9, accountType);    // Use passed type
-                psInsert.executeUpdate();
-                return true;
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,
-                    "Database error: " + e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
+    // ===== CHECK EMPTY FIELDS =====
+    if (firstName.trim().isEmpty() || lastName.trim().isEmpty() || email.trim().isEmpty()
+            || phone.trim().isEmpty() || birthdate.trim().isEmpty()
+            || password.isEmpty() || confirm.isEmpty() || gender.trim().isEmpty()
+            || accountType.trim().isEmpty() || securityQuestion.trim().isEmpty()
+            || securityAnswer.trim().isEmpty()) {
+        JOptionPane.showMessageDialog(null,
+                "Please fill in all fields",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        return false;
     }
+
+    // ===== PASSWORD VALIDATION =====
+    if (!password.equals(confirm)) {
+        JOptionPane.showMessageDialog(null,
+                "Passwords do not match",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+
+    if (password.length() < 6) {
+        JOptionPane.showMessageDialog(null,
+                "Password must be at least 6 characters",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+
+    // ===== CHECK IF EMAIL EXISTS =====
+    String sqlCheck = "SELECT * FROM tbl_accounts WHERE U_email=?";
+
+    try (Connection conn = connectDB();
+         PreparedStatement psCheck = conn.prepareStatement(sqlCheck)) {
+
+        psCheck.setString(1, email);
+        ResultSet rs = psCheck.executeQuery();
+
+        if (rs.next()) {
+            JOptionPane.showMessageDialog(null,
+                    "Email already exists",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // ===== INSERT NEW USER =====
+        String sqlInsert = "INSERT INTO tbl_accounts(U_firstname, U_lastname, U_email, U_phone, U_birthdate, U_gender, U_password, U_status, U_type, U_security_question, U_security_answer) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+
+        try (PreparedStatement psInsert = conn.prepareStatement(sqlInsert)) {
+            psInsert.setString(1, firstName);
+            psInsert.setString(2, lastName);
+            psInsert.setString(3, email);
+            psInsert.setString(4, phone);
+            psInsert.setString(5, birthdate);
+            psInsert.setString(6, gender);
+            psInsert.setString(7, password);
+            psInsert.setString(8, "Pending");      // New accounts always Pending
+            psInsert.setString(9, accountType);    // Use passed type
+            psInsert.setString(10, securityQuestion);
+            psInsert.setString(11, securityAnswer);
+            psInsert.executeUpdate();
+            return true;
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null,
+                "Database error: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+}
 
     // ================= LOAD PROFILE =================
     public String[] getLoggedInUserProfile(String email) {
@@ -455,4 +460,8 @@ public class config {
 
         return pending;
     }
+    
+    
+
+    
 }
