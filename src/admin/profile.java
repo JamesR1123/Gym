@@ -8,15 +8,14 @@ import elitegym.login;
 
 public class profile extends javax.swing.JFrame {
    
-    public void loadLoggedInUserProfile() {
+   public void loadLoggedInUserProfile() {
+    Session session = Session.getInstance();
 
-    config con = new config(); 
-    String[] user = con.getLoggedInUserProfile();
-
-    fullname.setText(user[0]+ " " + user[1]); // fullname
-    email.setText(user[2]);    // email
-    type.setText(user[3]);     // type
+    fullname.setText(session.getFullName()); // uses session
+    email.setText(session.getEmail());
+    type.setText(session.getType());
 }
+
 
 
 
@@ -61,6 +60,10 @@ public class profile extends javax.swing.JFrame {
         logout = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         fullname = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -182,9 +185,21 @@ public class profile extends javax.swing.JFrame {
         jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dashBlogo.png"))); // NOI18N
         jPanel2.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(-110, 20, 300, 110));
 
+        jLabel16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dashB.png"))); // NOI18N
+        jPanel2.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 30, 40));
+
+        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/administrator.png"))); // NOI18N
+        jPanel2.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, 30, 40));
+
+        jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/servicesG.png"))); // NOI18N
+        jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 280, 30, -1));
+
+        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/profile.png"))); // NOI18N
+        jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 30, 40));
+
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 230, 700));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(255, 235, 150));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         fullname.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -210,9 +225,9 @@ public class profile extends javax.swing.JFrame {
         email.setText("email");
         jPanel1.add(email, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 270, -1, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 120, 770, 560));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 90, 770, 590));
 
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBackground(new java.awt.Color(255, 235, 150));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel6.setText("Admin Profile");
@@ -326,6 +341,10 @@ public class profile extends javax.swing.JFrame {
     private javax.swing.JLabel fullname;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

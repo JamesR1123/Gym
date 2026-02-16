@@ -37,8 +37,10 @@ public class Session {
 
     // Convenience: Full name
     public String getFullName() {
-        return firstName + " " + lastName;
-    }
+    String f = firstName != null ? firstName : "";
+    String l = lastName != null ? lastName : "";
+    return (f + " " + l).trim();
+}
 
     // Clear session on logout
     public void clearSession() {

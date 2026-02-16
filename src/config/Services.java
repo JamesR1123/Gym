@@ -100,4 +100,31 @@ public boolean deleteService(int id) {
     }
 }
 
+public void loadActiveServices(JTable table) {
+
+    String sql = "SELECT service_id, service_name, description, duration, price " +
+                 "FROM gym_services WHERE status='Active'";
+
+    try (Connection conn = config.connectDB();
+         PreparedStatement pst = conn.prepareStatement(sql);
+         ResultSet rs = pst.executeQuery()) {
+
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0);
+
+        while (rs.next()) {
+            model.addRow(new Object[]{
+                rs.getInt("service_id"),
+                rs.getString("service_name"),
+                rs.getString("description"),
+                rs.getString("duration"),
+                rs.getDouble("price")
+            });
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Error loading services: " + e.getMessage());
+    }
+}
+
 }

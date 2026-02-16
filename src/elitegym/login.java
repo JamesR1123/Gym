@@ -5,7 +5,7 @@ import config.config;
 import javax.swing.JOptionPane;
 import admin.accountmanager;
 import config.Session;
-import user.userprofile;
+import member.memberProfile;
 
 
 public class login extends javax.swing.JFrame {
@@ -101,7 +101,7 @@ public class login extends javax.swing.JFrame {
         });
         jPanel2.add(register, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 400, -1, -1));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 102));
+        jPanel1.setBackground(new java.awt.Color(255, 235, 150));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Logo.png"))); // NOI18N
@@ -140,10 +140,12 @@ public class login extends javax.swing.JFrame {
     }//GEN-LAST:event_emActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    // 1. Get email and password
     String email = em.getText().trim();
-    char[] passwordChars = ps.getPassword();
+    String password = new String(ps.getPassword());
 
-    if (email.isEmpty() || passwordChars.length == 0) {
+    // 2. Check empty fields
+    if (email.isEmpty() || password.isEmpty()) {
         JOptionPane.showMessageDialog(this,
                 "Please fill in all fields",
                 "Error",
@@ -151,8 +153,9 @@ public class login extends javax.swing.JFrame {
         return;
     }
 
+    // 3. Check login details
     config con = new config();
-    String[] loginDetails = con.getLoginDetails(email, passwordChars);
+    String[] loginDetails = con.getLoginDetails(email, password);
     String status = loginDetails[0];
     String type = loginDetails[1];
 
@@ -164,6 +167,7 @@ public class login extends javax.swing.JFrame {
         return;
     }
 
+    // 4. Handle Pending Accounts
     if (status.equalsIgnoreCase("Pending")) {
         JOptionPane.showMessageDialog(this,
                 "Your account is still pending approval. Please wait for admin confirmation.",
@@ -172,29 +176,29 @@ public class login extends javax.swing.JFrame {
         return;
     }
 
+    // 5. Approved Accounts
     if (status.equalsIgnoreCase("Approved")) {
-        // Set session info
+        // 5a. Set logged-in user in config
+        con.setLoggedInUser(email, password);
+
+        // 5b. Set session
         Session session = Session.getInstance();
-        session.setEmail(email);
-        session.setType(type);
+        session.setEmail(config.loggedInEmail != null ? config.loggedInEmail : email);
+        session.setType(config.loggedInType != null ? config.loggedInType : type);
+        session.setFirstName(config.loggedInFirstName != null ? config.loggedInFirstName : "");
+        session.setLastName(config.loggedInLastName != null ? config.loggedInLastName : "");
 
-        // Important: set loggedInEmail in config before fetching profile
-        config.loggedInEmail = email;
-        String[] profile = con.getLoggedInUserProfile();
-        if (profile[0] != null && profile[1] != null) {
-            session.setFirstName(profile[0]);
-            session.setLastName(profile[1]);
-        }
-
+        // 5c. Show welcome message
         JOptionPane.showMessageDialog(this,
                 "Login successful! Welcome " + session.getFullName(),
                 "Welcome",
                 JOptionPane.INFORMATION_MESSAGE);
 
+        // 5d. Redirect based on type
         if (type.equalsIgnoreCase("Admin")) {
-            new admin.accountmanager().setVisible(true);
-        } else if (type.equalsIgnoreCase("User")) {
-            new user.userprofile().setVisible(true);
+            new admin.dashboard().setVisible(true);
+        } else if (type.equalsIgnoreCase("Member")) {
+            new member.memberDashB().setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this,
                     "Unknown user type!",
@@ -203,10 +207,9 @@ public class login extends javax.swing.JFrame {
             return;
         }
 
+        // Close login form
         this.dispose();
     }
-
-    java.util.Arrays.fill(passwordChars, '\0');
 
     }//GEN-LAST:event_jButton1ActionPerformed
 

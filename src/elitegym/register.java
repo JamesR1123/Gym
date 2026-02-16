@@ -40,7 +40,6 @@ public class register extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         lname = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        email1 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
@@ -49,11 +48,14 @@ public class register extends javax.swing.JFrame {
         pass1 = new javax.swing.JPasswordField();
         jLabel9 = new javax.swing.JLabel();
         login = new javax.swing.JLabel();
+        email2 = new javax.swing.JTextField();
+        type = new javax.swing.JComboBox<>();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 51));
+        jPanel1.setBackground(new java.awt.Color(255, 235, 150));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel2.setBackground(new java.awt.Color(0, 0, 0));
@@ -88,7 +90,7 @@ public class register extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 650, 410, 50));
+        jPanel2.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 740, 410, 50));
 
         jSeparator1.setForeground(new java.awt.Color(31, 63, 195));
         jSeparator1.setAutoscrolls(true);
@@ -100,7 +102,7 @@ public class register extends javax.swing.JFrame {
                 cpassActionPerformed(evt);
             }
         });
-        jPanel2.add(cpass, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 560, 410, 50));
+        jPanel2.add(cpass, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 650, 410, 50));
 
         phone.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
         phone.addActionListener(new java.awt.event.ActionListener() {
@@ -112,7 +114,7 @@ public class register extends javax.swing.JFrame {
 
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Sex");
-        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 330, 50, -1));
+        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 440, 50, -1));
 
         birthdate.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
         birthdate.addActionListener(new java.awt.event.ActionListener() {
@@ -139,17 +141,9 @@ public class register extends javax.swing.JFrame {
         jLabel6.setText("Birthdate (YYYY/MM/DD)");
         jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 330, -1, -1));
 
-        email1.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        email1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                email1ActionPerformed(evt);
-            }
-        });
-        jPanel2.add(email1, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 230, 200, 40));
-
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Confirm Password");
-        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 540, -1, -1));
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 630, -1, -1));
 
         jRadioButton1.setBackground(new java.awt.Color(0, 0, 0));
         jRadioButton1.setForeground(new java.awt.Color(255, 255, 255));
@@ -159,7 +153,7 @@ public class register extends javax.swing.JFrame {
                 jRadioButton1ActionPerformed(evt);
             }
         });
-        jPanel2.add(jRadioButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 350, -1, -1));
+        jPanel2.add(jRadioButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 470, -1, -1));
 
         jRadioButton2.setBackground(new java.awt.Color(0, 0, 0));
         jRadioButton2.setForeground(new java.awt.Color(255, 255, 255));
@@ -169,11 +163,11 @@ public class register extends javax.swing.JFrame {
                 jRadioButton2ActionPerformed(evt);
             }
         });
-        jPanel2.add(jRadioButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 350, -1, -1));
+        jPanel2.add(jRadioButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 470, -1, -1));
 
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("Email Address");
-        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 210, -1, -1));
+        jLabel5.setText("Type");
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 330, -1, -1));
 
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Phone Number");
@@ -184,11 +178,11 @@ public class register extends javax.swing.JFrame {
                 pass1ActionPerformed(evt);
             }
         });
-        jPanel2.add(pass1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 450, 410, 50));
+        jPanel2.add(pass1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 560, 410, 50));
 
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Password");
-        jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 430, -1, -1));
+        jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 540, -1, -1));
 
         login.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
         login.setForeground(new java.awt.Color(255, 255, 255));
@@ -198,34 +192,61 @@ public class register extends javax.swing.JFrame {
                 loginMouseClicked(evt);
             }
         });
-        jPanel2.add(login, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 740, -1, -1));
+        jPanel2.add(login, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 800, -1, -1));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 630, 800));
+        email2.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+        email2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                email2ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(email2, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 230, 200, 40));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 650, 820));
+        type.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "(Choose Account Type)", "Member", "Trainer" }));
+        jPanel2.add(type, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 350, 200, 40));
+
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText("Email Address");
+        jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 210, -1, -1));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 630, 830));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 650, 850));
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        String firstName = fname.getText();
-        String lastName = lname.getText();
-        String phoneNumber = phone.getText();
-        String birth = birthdate.getText();
-        String emailAddress = email1.getText();
-        char[] passwordValue = cpass.getPassword();
+        String firstName = fname.getText().trim();
+        String lastName = lname.getText().trim();
+        String phoneNumber = phone.getText().trim();
+        String birth = birthdate.getText().trim();
+        String emailAddress = email2.getText().trim();
+        String password = new String(pass1.getPassword());       // Convert char[] to String
+        String confirmPassword = new String(cpass.getPassword()); // Convert char[] to String
 
         // Get selected gender
         String gender = jRadioButton1.isSelected() ? "Male" : "Female";
 
+        // Get account type
+        String accountType = type.getSelectedItem().toString();
+        if(accountType.equals("(Choose Account Type)")) {
+            JOptionPane.showMessageDialog(this, "Please select an account type!");
+            return;
+        }
+
         config con = new config();
-            if (con.validateRegister(firstName, lastName, emailAddress, phoneNumber, birth, passwordValue, passwordValue, gender)) {
-                new login().setVisible(true);
-                this.dispose();
-            } else {
+
+        // Validate register using String passwords
+        if (con.validateRegister(firstName, lastName, emailAddress, phoneNumber, birth,
+                password, confirmPassword, gender, accountType)) {
+            JOptionPane.showMessageDialog(this, "Registration successful!");
+            new login().setVisible(true);
+            this.dispose();
+        } else {
             JOptionPane.showMessageDialog(this, "Registration failed! Check your inputs.");
-            }
+        }
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -253,10 +274,6 @@ public class register extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_lnameActionPerformed
 
-    private void email1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_email1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_email1ActionPerformed
-
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jRadioButton1ActionPerformed
@@ -275,6 +292,10 @@ public class register extends javax.swing.JFrame {
        log.setVisible(true);
        this.dispose();
     }//GEN-LAST:event_loginMouseClicked
+
+    private void email2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_email2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_email2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -314,10 +335,11 @@ public class register extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField birthdate;
     private javax.swing.JPasswordField cpass;
-    private javax.swing.JTextField email1;
+    private javax.swing.JTextField email2;
     private javax.swing.JTextField fname;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -335,5 +357,6 @@ public class register extends javax.swing.JFrame {
     private javax.swing.JLabel login;
     private javax.swing.JPasswordField pass1;
     private javax.swing.JTextField phone;
+    private javax.swing.JComboBox<String> type;
     // End of variables declaration//GEN-END:variables
 }

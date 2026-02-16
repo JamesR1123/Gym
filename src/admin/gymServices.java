@@ -79,9 +79,9 @@ public class gymServices extends javax.swing.JFrame {
         }
 
         // Update the label texts
-        TS.setText("Total Services: " + total);
-        AS.setText("Active Services: " + active);
-        IS.setText("Inactive Services: " + inactive);
+        label.setText("Total Services: " + total);
+        label2.setText("Active Services: " + active);
+        label3.setText("Inactive Services: " + inactive);
 
         // Also update the big number labels if you want
         Tservise.setText(String.valueOf(total));
@@ -111,12 +111,16 @@ public class gymServices extends javax.swing.JFrame {
         nav4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
-        TS = new javax.swing.JLabel();
-        IS = new javax.swing.JLabel();
-        AS = new javax.swing.JLabel();
+        label = new javax.swing.JLabel();
+        label3 = new javax.swing.JLabel();
+        label2 = new javax.swing.JLabel();
         Iservices = new javax.swing.JLabel();
         Tservise = new javax.swing.JLabel();
         Aservice = new javax.swing.JLabel();
@@ -233,9 +237,21 @@ public class gymServices extends javax.swing.JFrame {
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dashBlogo.png"))); // NOI18N
         jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(-110, 20, 300, 110));
 
+        jLabel16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dashB.png"))); // NOI18N
+        jPanel2.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 30, 40));
+
+        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/administrator.png"))); // NOI18N
+        jPanel2.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, 30, 40));
+
+        jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/servicesG.png"))); // NOI18N
+        jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 280, 30, -1));
+
+        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/profile.png"))); // NOI18N
+        jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 30, 40));
+
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 230, 700));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(255, 235, 150));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel13.setText("Gym Services");
@@ -243,17 +259,17 @@ public class gymServices extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, 810, 60));
 
-        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setBackground(new java.awt.Color(255, 235, 150));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        TS.setText("Total Services");
-        jPanel4.add(TS, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
+        label.setText("Total Services");
+        jPanel4.add(label, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
 
-        IS.setText("Inactive Services");
-        jPanel4.add(IS, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 20, -1, -1));
+        label3.setText("Inactive Services");
+        jPanel4.add(label3, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 20, -1, -1));
 
-        AS.setText("Active Services");
-        jPanel4.add(AS, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 20, -1, -1));
+        label2.setText("Active Services");
+        jPanel4.add(label2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 20, -1, -1));
 
         Iservices.setFont(new java.awt.Font("Tahoma", 1, 25)); // NOI18N
         Iservices.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -273,7 +289,7 @@ public class gymServices extends javax.swing.JFrame {
 
         getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 80, 810, 110));
 
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBackground(new java.awt.Color(255, 235, 150));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         servicetable.setModel(new javax.swing.table.DefaultTableModel(
@@ -504,17 +520,18 @@ public class gymServices extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel AS;
     private javax.swing.JLabel Aservice;
-    private javax.swing.JLabel IS;
     private javax.swing.JLabel Iservices;
-    private javax.swing.JLabel TS;
     private javax.swing.JLabel Tservise;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -528,6 +545,9 @@ public class gymServices extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel label;
+    private javax.swing.JLabel label2;
+    private javax.swing.JLabel label3;
     private javax.swing.JPanel logout;
     private javax.swing.JPanel nav1;
     private javax.swing.JPanel nav2;
