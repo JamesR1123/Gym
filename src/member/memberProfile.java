@@ -30,7 +30,6 @@ public class memberProfile extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
         nav2 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         nav1 = new javax.swing.JPanel();
@@ -41,6 +40,7 @@ public class memberProfile extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         logout = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         fullname = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -59,10 +59,6 @@ public class memberProfile extends javax.swing.JFrame {
 
         jLabel16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dashB.png"))); // NOI18N
         jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 30, 40));
-
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dashBlogo.png"))); // NOI18N
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(-110, 20, 300, 110));
 
         nav2.setBackground(new java.awt.Color(30, 30, 30));
         nav2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -164,6 +160,10 @@ public class memberProfile extends javax.swing.JFrame {
         logout.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, -1, -1));
 
         jPanel1.add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 630, 190, 50));
+
+        jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dashBlogo.png"))); // NOI18N
+        jPanel1.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(-90, 30, 280, 150));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 230, 700));
         jPanel1.getAccessibleContext().setAccessibleName("");
@@ -311,13 +311,13 @@ public class memberProfile extends javax.swing.JFrame {
     private javax.swing.JLabel fullname;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;

@@ -51,6 +51,10 @@ public class profile extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         nav1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
+        nav6 = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        nav5 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
         nav2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         nav3 = new javax.swing.JPanel();
@@ -59,11 +63,16 @@ public class profile extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         logout = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         fullname = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -100,6 +109,46 @@ public class profile extends javax.swing.JFrame {
         nav1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
         jPanel2.add(nav1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 130, 170, 40));
+
+        nav6.setBackground(new java.awt.Color(30, 30, 30));
+        nav6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nav6MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                nav6MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                nav6MouseExited(evt);
+            }
+        });
+        nav6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setText("Trainer");
+        nav6.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+
+        jPanel2.add(nav6, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 480, 170, 40));
+
+        nav5.setBackground(new java.awt.Color(30, 30, 30));
+        nav5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nav5MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                nav5MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                nav5MouseExited(evt);
+            }
+        });
+        nav5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText("Member");
+        nav5.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+
+        jPanel2.add(nav5, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 410, 170, 40));
 
         nav2.setBackground(new java.awt.Color(30, 30, 30));
         nav2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -181,9 +230,6 @@ public class profile extends javax.swing.JFrame {
 
         jPanel2.add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 630, 190, 50));
 
-        jLabel16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dashB.png"))); // NOI18N
-        jPanel2.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 30, 40));
-
         jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/administrator.png"))); // NOI18N
         jPanel2.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, 30, 40));
 
@@ -196,6 +242,27 @@ public class profile extends javax.swing.JFrame {
         jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dashBlogo.png"))); // NOI18N
         jPanel2.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(-90, 30, 280, 150));
+
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Dashboard.png"))); // NOI18N
+        jPanel2.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 50, 50));
+
+        jLabel19.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/accountManager.png"))); // NOI18N
+        jPanel2.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, -1, 50));
+
+        jLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Services.png"))); // NOI18N
+        jPanel2.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, 50, 50));
+
+        jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Proofile.png"))); // NOI18N
+        jPanel2.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 330, 50, 50));
+
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Member.png"))); // NOI18N
+        jPanel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 400, 50, 50));
+
+        jLabel21.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel21.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Trainer.png"))); // NOI18N
+        jPanel2.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 470, 50, 50));
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 230, 700));
 
@@ -240,7 +307,7 @@ public class profile extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void nav2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav2MouseEntered
-      
+        nav2.setBackground(new Color (255, 249, 196));
     }//GEN-LAST:event_nav2MouseEntered
 
     private void logoutMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseExited
@@ -248,7 +315,7 @@ public class profile extends javax.swing.JFrame {
     }//GEN-LAST:event_logoutMouseExited
 
     private void nav2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav2MouseExited
-      
+        nav2.setBackground(new Color(30,30,30));
     }//GEN-LAST:event_nav2MouseExited
 
     private void logoutMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseEntered
@@ -309,6 +376,34 @@ public class profile extends javax.swing.JFrame {
         nav4.setBackground(new Color(30,30,30));
     }//GEN-LAST:event_nav4MouseExited
 
+    private void nav5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav5MouseClicked
+        memberMenu mi = new memberMenu();
+        mi.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_nav5MouseClicked
+
+    private void nav5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav5MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nav5MouseEntered
+
+    private void nav5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav5MouseExited
+       nav5.setBackground(new Color(30,30,30));
+    }//GEN-LAST:event_nav5MouseExited
+
+    private void nav6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav6MouseClicked
+        trainerMenu mi = new trainerMenu();
+        mi.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_nav6MouseClicked
+
+    private void nav6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav6MouseEntered
+        nav6.setBackground(new Color (255, 249, 196));
+    }//GEN-LAST:event_nav6MouseEntered
+
+    private void nav6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav6MouseExited
+        nav6.setBackground(new Color(30,30,30));
+    }//GEN-LAST:event_nav6MouseExited
+
     
     public static void main(String args[]) {
         
@@ -340,12 +435,19 @@ public class profile extends javax.swing.JFrame {
     private javax.swing.JLabel email;
     private javax.swing.JLabel fullname;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -361,6 +463,8 @@ public class profile extends javax.swing.JFrame {
     private javax.swing.JPanel nav2;
     private javax.swing.JPanel nav3;
     private javax.swing.JPanel nav4;
+    private javax.swing.JPanel nav5;
+    private javax.swing.JPanel nav6;
     private javax.swing.JLabel type;
     // End of variables declaration//GEN-END:variables
 }

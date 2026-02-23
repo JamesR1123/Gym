@@ -182,7 +182,6 @@ public class config {
         return false;
     }
 
-    // ================= REGISTER =================
 public boolean validateRegister(
         String firstName,
         String lastName,
@@ -205,6 +204,49 @@ public boolean validateRegister(
             || securityAnswer.trim().isEmpty()) {
         JOptionPane.showMessageDialog(null,
                 "Please fill in all fields",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+
+    // ===== FIRST & LAST NAME VALIDATION =====
+    String namePattern = "^[a-zA-Z\\s]+$"; // Only letters and spaces
+    if (!firstName.matches(namePattern)) {
+        JOptionPane.showMessageDialog(null,
+                "First name must contain letters only",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+    if (!lastName.matches(namePattern)) {
+        JOptionPane.showMessageDialog(null,
+                "Last name must contain letters only",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+
+    // ===== EMAIL VALIDATION =====
+    String emailPattern = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+    if (!email.matches(emailPattern)) {
+        JOptionPane.showMessageDialog(null,
+                "Please enter a valid email address",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+
+    // ===== PHONE VALIDATION =====
+    if (!phone.matches("\\d+")) {
+        JOptionPane.showMessageDialog(null,
+                "Phone number must contain digits only",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+    if (phone.length() != 11) {
+        JOptionPane.showMessageDialog(null,
+                "Phone number must be exactly 11 digits",
                 "Error",
                 JOptionPane.ERROR_MESSAGE);
         return false;
@@ -271,6 +313,7 @@ public boolean validateRegister(
         return false;
     }
 }
+
 
     // ================= LOAD PROFILE =================
     public String[] getLoggedInUserProfile(String email) {

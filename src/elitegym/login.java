@@ -140,8 +140,9 @@ public class login extends javax.swing.JFrame {
 
         jPanel2.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 0, 400, 490));
 
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/account.png"))); // NOI18N
-        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 180, 40, 30));
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-email-24.png"))); // NOI18N
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 180, 30, 30));
 
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/password.png"))); // NOI18N
         jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 240, 40, 30));
