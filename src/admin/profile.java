@@ -8,12 +8,52 @@ import elitegym.login;
 
 public class profile extends javax.swing.JFrame {
    
-   public void loadLoggedInUserProfile() {
-    Session session = Session.getInstance();
+public void loadLoggedInUserProfile() {
+        
+        // Get current session
+        Session session = Session.getInstance();
 
-    fullname.setText(session.getFullName()); // uses session
-    email.setText(session.getEmail());
-    type.setText(session.getType());
+        // Set full name and email from session
+        fullname.setText(session.getFullName() != null && !session.getFullName().isEmpty()
+                         ? session.getFullName()
+                         : "N/A");
+        email.setText(session.getEmail() != null && !session.getEmail().isEmpty()
+                      ? session.getEmail()
+                      : "N/A");
+
+        // Load additional profile info from DB
+        config conf = new config();
+        String[] profileData = conf.getLoggedInUserProfile(session.getEmail());
+
+        if (profileData != null && profileData.length >= 5) {
+            // profileData[0] = first name
+            // profileData[1] = last name
+            // profileData[2] = email
+            // profileData[3] = phone
+            // profileData[4] = password
+
+            // Phone number
+            phonenum.setText(profileData[3] != null && !profileData[3].isEmpty()
+                             ? profileData[3]
+                             : "N/A");
+
+            // Mask password manually (works in all Java versions)
+            String password = profileData[4] != null ? profileData[4] : "";
+            if (password.isEmpty()) {
+                pass.setText("N/A");
+            } else {
+                StringBuilder masked = new StringBuilder();
+                for (int i = 0; i < password.length(); i++) {
+                    masked.append("*");
+                }
+                pass.setText(masked.toString());
+            }
+
+        } else {
+            // Fallback if profile not loaded correctly
+            phonenum.setText("N/A");
+            pass.setText("********");
+        }
 }
 
 
@@ -63,23 +103,28 @@ public class profile extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         logout = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         fullname = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        type = new javax.swing.JLabel();
+        pass = new javax.swing.JLabel();
         email = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        phonenum = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
 
@@ -230,19 +275,6 @@ public class profile extends javax.swing.JFrame {
 
         jPanel2.add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 630, 190, 50));
 
-        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/administrator.png"))); // NOI18N
-        jPanel2.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, 30, 40));
-
-        jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/servicesG.png"))); // NOI18N
-        jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 280, 30, -1));
-
-        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/profile.png"))); // NOI18N
-        jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 30, 40));
-
-        jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dashBlogo.png"))); // NOI18N
-        jPanel2.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(-90, 30, 280, 150));
-
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Dashboard.png"))); // NOI18N
         jPanel2.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 50, 50));
@@ -264,6 +296,10 @@ public class profile extends javax.swing.JFrame {
         jLabel21.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Trainer.png"))); // NOI18N
         jPanel2.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 470, 50, 50));
 
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dashBlogo.png"))); // NOI18N
+        jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(-90, 30, 280, 150));
+
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 230, 700));
 
         jPanel1.setBackground(new java.awt.Color(255, 235, 150));
@@ -272,27 +308,64 @@ public class profile extends javax.swing.JFrame {
         fullname.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         fullname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         fullname.setText("name");
-        jPanel1.add(fullname, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 130, 536, 30));
+        jPanel1.add(fullname, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 200, 536, 30));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel1.setText("Type");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 310, -1, -1));
+        jLabel1.setText("Password");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 460, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel7.setText("Email");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 250, -1, -1));
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 330, -1, -1));
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel8.setText("Personal Information");
-        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 210, -1, -1));
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 270, -1, -1));
 
-        type.setText("type");
-        jPanel1.add(type, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 330, -1, -1));
+        pass.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
+        pass.setText("password");
+        jPanel1.add(pass, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 480, -1, -1));
 
+        email.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
         email.setText("email");
-        jPanel1.add(email, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 270, -1, -1));
+        jPanel1.add(email, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 350, -1, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 90, 770, 590));
+        jLabel15.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel15.setText("Phone Number");
+        jPanel1.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 390, -1, -1));
+
+        phonenum.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
+        phonenum.setText("phonenum");
+        jPanel1.add(phonenum, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 410, -1, -1));
+
+        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Ppass.png"))); // NOI18N
+        jPanel1.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 480, 40, 30));
+
+        jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Pemail.png"))); // NOI18N
+        jPanel1.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 350, 40, 30));
+
+        jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel22.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Pphone.png"))); // NOI18N
+        jPanel1.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 410, 40, 30));
+
+        jLabel23.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel23.setForeground(new java.awt.Color(30, 30, 30));
+        jLabel23.setText("+Edit");
+        jPanel1.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 480, -1, -1));
+
+        jLabel24.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel24.setForeground(new java.awt.Color(30, 30, 30));
+        jLabel24.setText("+Edit");
+        jPanel1.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 410, -1, -1));
+
+        jLabel25.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel25.setForeground(new java.awt.Color(30, 30, 30));
+        jLabel25.setText("+Edit");
+        jPanel1.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 350, -1, -1));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 90, 780, 580));
 
         jPanel3.setBackground(new java.awt.Color(255, 235, 150));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -300,7 +373,7 @@ public class profile extends javax.swing.JFrame {
         jLabel6.setText("Admin Profile");
         jPanel3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 300, -1));
 
-        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, 770, 70));
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, 780, 70));
 
         pack();
         setLocationRelativeTo(null);
@@ -383,7 +456,7 @@ public class profile extends javax.swing.JFrame {
     }//GEN-LAST:event_nav5MouseClicked
 
     private void nav5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav5MouseEntered
-        // TODO add your handling code here:
+        nav5.setBackground(new Color (255, 249, 196));
     }//GEN-LAST:event_nav5MouseEntered
 
     private void nav5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav5MouseExited
@@ -448,6 +521,10 @@ public class profile extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -465,6 +542,7 @@ public class profile extends javax.swing.JFrame {
     private javax.swing.JPanel nav4;
     private javax.swing.JPanel nav5;
     private javax.swing.JPanel nav6;
-    private javax.swing.JLabel type;
+    private javax.swing.JLabel pass;
+    private javax.swing.JLabel phonenum;
     // End of variables declaration//GEN-END:variables
 }

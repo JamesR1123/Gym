@@ -138,13 +138,13 @@ private boolean isValidDate(String dateStr) {
         jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 460, -1, -1));
 
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
-        jButton1.setText("Submit");
+        jButton1.setText("Save Changes");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 570, -1, -1));
+        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 550, -1, -1));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 19)); // NOI18N
         jLabel1.setText("ID:");
@@ -183,89 +183,90 @@ private boolean isValidDate(String dateStr) {
     }//GEN-LAST:event_emailActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    // Get updated values from the text fields
-    String id = idField.getText().trim();
-    String firstName = firstname.getText().trim();
-    String lastName = lastname.getText().trim();
-    String phoneNumber = phone.getText().trim();
-    String emailAddress = email.getText().trim();
-    String birthDate = birth.getText().trim();
 
-    // ===== Validation =====
-    if (firstName.isEmpty() || lastName.isEmpty() || phoneNumber.isEmpty() 
-        || emailAddress.isEmpty() || birthDate.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Please fill in all fields!");
-        return;
-    }
+        // Get updated values from the text fields
+        String id = idField.getText().trim();
+        String firstName = firstname.getText().trim();
+        String lastName = lastname.getText().trim();
+        String phoneNumber = phone.getText().trim();
+        String emailAddress = email.getText().trim();
+        String birthDate = birth.getText().trim();
 
-    // Phone number: only digits & exactly 11 digits
-    if (!phoneNumber.matches("\\d{11}")) {
-        JOptionPane.showMessageDialog(this, "Phone number must be exactly 11 digits!");
-        return;
-    }
-
-    // Email format validation
-    if (!emailAddress.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-        JOptionPane.showMessageDialog(this, "Invalid email address!");
-        return;
-    }
-
-    // Birthdate validation
-    if (!isValidDate(birthDate)) {
-        JOptionPane.showMessageDialog(this, "Invalid birthdate! Use YYYY/MM/DD");
-        return;
-    }
-
-    // ===== Check if email already exists for another member =====
-    try {
-        Connection conn = config.connectDB();
-        String checkEmail = "SELECT U_id FROM tbl_accounts WHERE U_email = ? AND U_id <> ?";
-        PreparedStatement pstCheck = conn.prepareStatement(checkEmail);
-        pstCheck.setString(1, emailAddress);
-        pstCheck.setString(2, id);
-        java.sql.ResultSet rs = pstCheck.executeQuery();
-
-        if (rs.next()) {
-            JOptionPane.showMessageDialog(this, "This email is already used by another member!");
-            pstCheck.close();
-            conn.close();
+        // ===== Validation =====
+        if (firstName.isEmpty() || lastName.isEmpty() || phoneNumber.isEmpty() 
+            || emailAddress.isEmpty() || birthDate.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please fill in all fields!");
             return;
         }
-        pstCheck.close();
 
-        // ===== Update DB =====
-        String sql = "UPDATE tbl_accounts SET " +
-                     "U_firstname = ?, " +
-                     "U_lastname = ?, " +
-                     "U_phone = ?, " +
-                     "U_email = ?, " +
-                     "U_birthdate = ? " +
-                     "WHERE U_id = ?";
-
-        PreparedStatement pst = conn.prepareStatement(sql);
-        pst.setString(1, firstName);
-        pst.setString(2, lastName);
-        pst.setString(3, phoneNumber);
-        pst.setString(4, emailAddress);
-        pst.setString(5, birthDate);
-        pst.setString(6, id);
-
-        int updated = pst.executeUpdate();
-
-        if (updated > 0) {
-            JOptionPane.showMessageDialog(this, "Member updated successfully!");
-            this.dispose(); // close the edit window
-        } else {
-            JOptionPane.showMessageDialog(this, "Failed to update member.");
+        // Phone number: only digits & exactly 11 digits
+        if (!phoneNumber.matches("\\d{11}")) {
+            JOptionPane.showMessageDialog(this, "Phone number must be exactly 11 digits!");
+            return;
         }
 
-        pst.close();
-        conn.close();
+        // Email format validation
+        if (!emailAddress.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            JOptionPane.showMessageDialog(this, "Invalid email address!");
+            return;
+        }
 
-    } catch (Exception e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-    }
+        // Birthdate validation
+        if (!isValidDate(birthDate)) {
+            JOptionPane.showMessageDialog(this, "Invalid birthdate! Use YYYY/MM/DD");
+            return;
+        }
+
+        // ===== Check if email already exists for another member =====
+        try {
+            Connection conn = config.connectDB();
+            String checkEmail = "SELECT U_id FROM tbl_accounts WHERE U_email = ? AND U_id <> ?";
+            PreparedStatement pstCheck = conn.prepareStatement(checkEmail);
+            pstCheck.setString(1, emailAddress);
+            pstCheck.setString(2, id);
+            java.sql.ResultSet rs = pstCheck.executeQuery();
+
+            if (rs.next()) {
+                JOptionPane.showMessageDialog(this, "This email is already used by another member!");
+                pstCheck.close();
+                conn.close();
+                return;
+            }
+            pstCheck.close();
+
+            // ===== Update DB =====
+            String sql = "UPDATE tbl_accounts SET " +
+                         "U_firstname = ?, " +
+                         "U_lastname = ?, " +
+                         "U_phone = ?, " +
+                         "U_email = ?, " +
+                         "U_birthdate = ? " +
+                         "WHERE U_id = ?";
+
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, firstName);
+            pst.setString(2, lastName);
+            pst.setString(3, phoneNumber);
+            pst.setString(4, emailAddress);
+            pst.setString(5, birthDate);
+            pst.setString(6, id);
+
+            int updated = pst.executeUpdate();
+
+            if (updated > 0) {
+                JOptionPane.showMessageDialog(this, "Member updated successfully!");
+                this.dispose(); // close the edit window
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to update member.");
+            }
+
+            pst.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
 
     }//GEN-LAST:event_jButton1ActionPerformed
 

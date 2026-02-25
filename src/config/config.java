@@ -317,8 +317,8 @@ public boolean validateRegister(
 
     // ================= LOAD PROFILE =================
     public String[] getLoggedInUserProfile(String email) {
-        String[] profile = new String[4]; // first name, last name, email, type
-        String sql = "SELECT U_firstname, U_lastname, U_email, U_type FROM tbl_accounts WHERE U_email = ?";
+        String[] profile = new String[5]; // first name, last name, email, type
+        String sql = "SELECT U_firstname, U_lastname, U_email, U_phone, U_password FROM tbl_accounts WHERE U_email = ?";
 
         try (Connection conn = connectDB();
              PreparedStatement pst = conn.prepareStatement(sql)) {
@@ -328,9 +328,10 @@ public boolean validateRegister(
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     profile[0] = rs.getString("U_firstname");
-                    profile[1] = rs.getString("U_lastname");
+                    profile[1] = rs.getString("U_lastname");    
                     profile[2] = rs.getString("U_email");
-                    profile[3] = rs.getString("U_type");
+                    profile[3] = rs.getString("U_phone");
+                    profile[4] = rs.getString("U_password");
                 }
             }
 

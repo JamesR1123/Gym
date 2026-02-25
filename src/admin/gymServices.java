@@ -38,46 +38,45 @@ public class gymServices extends javax.swing.JFrame {
     
     
     
-    public void loadServices() {
-        try (Connection conn = config.connectDB();
-             PreparedStatement pst = conn.prepareStatement("SELECT * FROM gym_services");
-             ResultSet rs = pst.executeQuery()) {
+   public void loadServices() {
+    try (Connection conn = config.connectDB();
+         PreparedStatement pst = conn.prepareStatement("SELECT * FROM gym_services");
+         ResultSet rs = pst.executeQuery()) {
 
-            DefaultTableModel model = (DefaultTableModel) servicetable.getModel();
-            model.setRowCount(0); // clear existing rows
+        // Set up table model with correct columns
+        DefaultTableModel model = new DefaultTableModel(
+            new Object[] { "ID", "Service Name", "Description", "Duration", "Price", "Status" }, 0
+        );
+        servicetable.setModel(model); // apply new model
 
-            int total = 0, active = 0, inactive = 0;
+        int total = 0, active = 0, inactive = 0;
 
-            while (rs.next()) {
-                total++;
-                String status = rs.getString("status");
-                if (status.equalsIgnoreCase("Active")) active++;
-                else inactive++;
+        while (rs.next()) {
+            total++;
+            String status = rs.getString("status");
+            if (status.equalsIgnoreCase("Active")) active++;
+            else inactive++;
 
-                model.addRow(new Object[]{
-                    rs.getInt("service_id"),
-                    rs.getString("service_name"),
-                    rs.getString("description"),
-                    rs.getString("duration"),
-                    rs.getDouble("price"),
-                    status
-                });
-            }
-
-            // Update summary labels
-            label.setText("Total Services: " + total);
-            label2.setText("Active Services: " + active);
-            label3.setText("Inactive Services: " + inactive);
-
-            Tservise.setText(String.valueOf(total));
-            Aservice.setText(String.valueOf(active));
-            Iservices.setText(String.valueOf(inactive));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            javax.swing.JOptionPane.showMessageDialog(this, "Error loading services: " + e.getMessage());
+            model.addRow(new Object[]{
+                rs.getInt("service_id"),
+                rs.getString("service_name"),
+                rs.getString("description"),
+                rs.getString("duration"),
+                rs.getDouble("price"),
+                status
+            });
         }
+
+
+        Tservise.setText(String.valueOf(total));
+        Aservice.setText(String.valueOf(active));
+        Iservices.setText(String.valueOf(inactive));
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        javax.swing.JOptionPane.showMessageDialog(this, "Error loading services: " + e.getMessage());
     }
+}
 
 
    
@@ -97,10 +96,6 @@ public class gymServices extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         nav4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
         nav5 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         nav6 = new javax.swing.JPanel();
@@ -111,6 +106,7 @@ public class gymServices extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
@@ -131,8 +127,7 @@ public class gymServices extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(1060, 700));
-        setPreferredSize(new java.awt.Dimension(1060, 690));
+        setSize(new java.awt.Dimension(1010, 680));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel2.setBackground(new java.awt.Color(30, 30, 30));
@@ -220,6 +215,14 @@ public class gymServices extends javax.swing.JFrame {
         jPanel2.add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 630, 190, 50));
 
         nav4.setBackground(new java.awt.Color(30, 30, 30));
+        nav4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                nav4MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                nav4MouseExited(evt);
+            }
+        });
         nav4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -228,19 +231,6 @@ public class gymServices extends javax.swing.JFrame {
 
         jPanel2.add(nav4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 270, 170, 40));
         nav4.getAccessibleContext().setAccessibleName("");
-
-        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/administrator.png"))); // NOI18N
-        jPanel2.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, 30, 40));
-
-        jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/servicesG.png"))); // NOI18N
-        jPanel2.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 280, 30, -1));
-
-        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/profile.png"))); // NOI18N
-        jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 30, 40));
-
-        jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dashBlogo.png"))); // NOI18N
-        jPanel2.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(-90, 30, 280, 150));
 
         nav5.setBackground(new java.awt.Color(30, 30, 30));
         nav5.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -303,6 +293,10 @@ public class gymServices extends javax.swing.JFrame {
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Trainer.png"))); // NOI18N
         jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 470, 50, 50));
 
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dashBlogo.png"))); // NOI18N
+        jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(-90, 30, 280, 150));
+
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 230, 700));
 
         jPanel1.setBackground(new java.awt.Color(255, 235, 150));
@@ -311,7 +305,7 @@ public class gymServices extends javax.swing.JFrame {
         jLabel13.setText("Gym Services");
         jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 300, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, 810, 60));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, 820, 60));
 
         jPanel4.setBackground(new java.awt.Color(255, 235, 150));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -338,10 +332,10 @@ public class gymServices extends javax.swing.JFrame {
         jPanel4.add(Aservice, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 50, 50, 40));
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/services.png"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Tservices.png"))); // NOI18N
         jPanel4.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, 50, 50));
 
-        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 80, 810, 110));
+        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 80, 820, 110));
 
         jPanel3.setBackground(new java.awt.Color(255, 235, 150));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -359,7 +353,7 @@ public class gymServices extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(servicetable);
 
-        jPanel3.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 790, 390));
+        jPanel3.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 800, 390));
 
         jButton1.setText("Delete Services");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -367,35 +361,35 @@ public class gymServices extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 30, -1, -1));
+        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 30, -1, -1));
 
-        jButton2.setText("Add Services");
+        jButton2.setText("Activate Services");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 130, -1));
+        jPanel3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 150, -1));
 
-        jButton3.setText("Update Services");
+        jButton3.setText("Deactivate Services");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 30, -1, -1));
+        jPanel3.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 30, -1, -1));
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
             }
         });
-        jPanel3.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 30, 260, 30));
+        jPanel3.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 30, 260, 30));
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/search.png"))); // NOI18N
-        jPanel3.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 30, -1, 20));
+        jPanel3.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 30, 30, 30));
 
-        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 200, 810, 480));
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 200, 820, 480));
 
         pack();
         setLocationRelativeTo(null);
@@ -425,7 +419,7 @@ public class gymServices extends javax.swing.JFrame {
     }//GEN-LAST:event_logoutMouseClicked
 
     private void nav1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav1MouseExited
-        nav1.setBackground(new Color(0, 0, 0));
+        nav1.setBackground(new Color(30, 30, 30));
     }//GEN-LAST:event_nav1MouseExited
 
     private void nav1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav1MouseEntered
@@ -458,69 +452,37 @@ public class gymServices extends javax.swing.JFrame {
     }//GEN-LAST:event_nav3MouseExited
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        String serviceName = javax.swing.JOptionPane.showInputDialog(this, "Service Name:");
-    if (serviceName == null || serviceName.trim().isEmpty()) return;
-
-    String description = javax.swing.JOptionPane.showInputDialog(this, "Description:");
-    if (description == null) description = "";
-
-    String duration = javax.swing.JOptionPane.showInputDialog(this, "Duration (e.g., 1 month, 10 sessions):");
-    if (duration == null) duration = "";
-
-    String priceStr = javax.swing.JOptionPane.showInputDialog(this, "Price:");
-    if (priceStr == null || priceStr.trim().isEmpty()) return;
-
-    double price = 0;
-    try {
-        price = Double.parseDouble(priceStr);
-    } catch (NumberFormatException e) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Invalid price input.");
-        return;
-    }
-
-    String status = javax.swing.JOptionPane.showInputDialog(this, "Status (Active/Inactive):", "Active");
-    if (status == null || status.trim().isEmpty()) status = "Active";
-
-    Services svc = new Services();
-    if (svc.addService(serviceName, description, duration, price, status)) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Service added successfully!");
-        loadServices(); // Refresh table after adding
-    } else {
-        javax.swing.JOptionPane.showMessageDialog(this, "Failed to add service.");
-    }
+        // Activate selected service
+        int selectedRow = servicetable.getSelectedRow();
+        if (selectedRow != -1) {
+            int id = (int) servicetable.getValueAt(selectedRow, 0); // ID column
+            Services svc = new Services();
+            if (svc.updateServiceStatus(id, "Active")) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Service activated.");
+                loadServices();
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Failed to activate service.");
+            }
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Select a service to activate.");
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // Deactivate selected service
         int selectedRow = servicetable.getSelectedRow();
         if (selectedRow != -1) {
-        int id = (int) servicetable.getValueAt(selectedRow, 0); // ID column
-        String currentName = (String) servicetable.getValueAt(selectedRow, 1);
-        String currentDesc = (String) servicetable.getValueAt(selectedRow, 2);
-        String currentDuration = (String) servicetable.getValueAt(selectedRow, 3);
-        double currentPrice = (double) servicetable.getValueAt(selectedRow, 4);
-        String currentStatus = (String) servicetable.getValueAt(selectedRow, 5);
-
-        String newName = javax.swing.JOptionPane.showInputDialog(this, "Service Name:", currentName);
-        String newDesc = javax.swing.JOptionPane.showInputDialog(this, "Description:", currentDesc);
-        String newDuration = javax.swing.JOptionPane.showInputDialog(this, "Duration:", currentDuration);
-        String priceStr = javax.swing.JOptionPane.showInputDialog(this, "Price:", currentPrice);
-        String newStatus = javax.swing.JOptionPane.showInputDialog(this, "Status (Active/Inactive):", currentStatus);
-
-        double newPrice = currentPrice;
-        try {
-            newPrice = Double.parseDouble(priceStr);
-        } catch (NumberFormatException e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Invalid price input. Keeping old value.");
+            int id = (int) servicetable.getValueAt(selectedRow, 0); // ID column
+            Services svc = new Services();
+            if (svc.updateServiceStatus(id, "Inactive")) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Service deactivated.");
+                loadServices();
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Failed to deactivate service.");
+            }
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Select a service to deactivate.");
         }
-
-        Services svc = new Services();
-        if (svc.updateService(id, newName, newDesc, newDuration, newPrice, newStatus)) {
-            loadServices(); // refresh table
-        }
-
-    } else {
-        javax.swing.JOptionPane.showMessageDialog(this, "Select a service to update.");
-    }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -574,6 +536,14 @@ public class gymServices extends javax.swing.JFrame {
         nav6.setBackground(new Color(30,30,30));
     }//GEN-LAST:event_nav6MouseExited
 
+    private void nav4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav4MouseEntered
+        nav4.setBackground(new Color (255, 249, 196));
+    }//GEN-LAST:event_nav4MouseEntered
+
+    private void nav4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav4MouseExited
+        nav4.setBackground(new Color(30,30,30));
+    }//GEN-LAST:event_nav4MouseExited
+
     
     public static void main(String args[]) {
         
@@ -614,10 +584,7 @@ public class gymServices extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;

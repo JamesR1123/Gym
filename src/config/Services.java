@@ -64,26 +64,19 @@ public class Services {
         }
     }
     
-public boolean updateService(int id, String name, String description, String duration, double price, String status) {
-    String sql = "UPDATE gym_services SET service_name=?, description=?, duration=?, price=?, status=? WHERE service_id=?";
-    try (Connection conn = connectDB();
+public boolean updateServiceStatus(int id, String newStatus) {
+    String sql = "UPDATE gym_services SET status=? WHERE service_id=?";
+    try (Connection conn = config.connectDB();
          PreparedStatement pst = conn.prepareStatement(sql)) {
-
-        pst.setString(1, name);
-        pst.setString(2, description);
-        pst.setString(3, duration);
-        pst.setDouble(4, price);
-        pst.setString(5, status);
-        pst.setInt(6, id);
-
-        pst.executeUpdate();
-        return true;
-
-    } catch (SQLException e) {
-        System.out.println("Error updating service: " + e.getMessage());
+        pst.setString(1, newStatus);
+        pst.setInt(2, id);
+        return pst.executeUpdate() > 0;
+    } catch (Exception e) {
+        e.printStackTrace();
         return false;
     }
 }
+
 
 public boolean deleteService(int id) {
     String sql = "DELETE FROM gym_services WHERE service_id=?";

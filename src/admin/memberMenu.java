@@ -14,8 +14,32 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class memberMenu extends javax.swing.JFrame {  
+   
+    public memberMenu(){
+        
+        if (!Session.getInstance().isLoggedIn()) {
+        new login().setVisible(true);
+        this.dispose();
+        return;
+    }
+        initComponents();
+        
+        config con = new config();
+        loadMembers(membertable);
+        nav1.setOpaque(true);
+        nav2.setOpaque(true);
+        logout.setOpaque(true);
+        logout.setOpaque(true);
+        
+        nav1.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        nav2.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        logout.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+  
     
-    public void loadMembers(JTable table) {
+    }
+    
+        public void loadMembers(JTable table) {
 
     DefaultTableModel model = new DefaultTableModel();
     model.setColumnIdentifiers(new String[]{
@@ -62,30 +86,6 @@ public class memberMenu extends javax.swing.JFrame {
     // Update the MEM label with total members
     MEM.setText(String.valueOf(totalMembers));
 }
-   
-    public memberMenu(){
-        
-        if (!Session.getInstance().isLoggedIn()) {
-        new login().setVisible(true);
-        this.dispose();
-        return;
-    }
-        initComponents();
-        
-        config con = new config();
-        loadMembers(membertable);
-        nav1.setOpaque(true);
-        nav2.setOpaque(true);
-        logout.setOpaque(true);
-        logout.setOpaque(true);
-        
-        nav1.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        nav2.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        logout.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
-  
-    
-    }
     
    
    
@@ -102,6 +102,8 @@ public class memberMenu extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         nav4 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
+        nav5 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
         nav6 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         logout = new javax.swing.JPanel();
@@ -110,11 +112,9 @@ public class memberMenu extends javax.swing.JFrame {
         jLabel15 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
-        nav5 = new javax.swing.JPanel();
-        jLabel10 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
@@ -129,6 +129,7 @@ public class memberMenu extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         MEM = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -217,6 +218,26 @@ public class memberMenu extends javax.swing.JFrame {
 
         jPanel2.add(nav4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 340, 170, 40));
 
+        nav5.setBackground(new java.awt.Color(30, 30, 30));
+        nav5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nav5MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                nav5MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                nav5MouseExited(evt);
+            }
+        });
+        nav5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText("Member");
+        nav5.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+
+        jPanel2.add(nav5, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 410, 170, 40));
+
         nav6.setBackground(new java.awt.Color(30, 30, 30));
         nav6.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -270,30 +291,6 @@ public class memberMenu extends javax.swing.JFrame {
         jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Proofile.png"))); // NOI18N
         jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 330, 50, 50));
 
-        jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dashBlogo.png"))); // NOI18N
-        jPanel2.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(-90, 30, 280, 150));
-
-        nav5.setBackground(new java.awt.Color(30, 30, 30));
-        nav5.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                nav5MouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                nav5MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                nav5MouseExited(evt);
-            }
-        });
-        nav5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel10.setText("Member");
-        nav5.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
-
-        jPanel2.add(nav5, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 410, 170, 40));
-
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Trainer.png"))); // NOI18N
         jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 470, 50, 50));
@@ -301,6 +298,10 @@ public class memberMenu extends javax.swing.JFrame {
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Member.png"))); // NOI18N
         jPanel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 400, 50, 50));
+
+        jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dashBlogo.png"))); // NOI18N
+        jPanel2.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(-90, 30, 280, 150));
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 230, 700));
 
@@ -354,15 +355,15 @@ public class memberMenu extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 30, -1, -1));
+        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 30, -1, -1));
 
-        jButton2.setText("Edit");
+        jButton2.setText("Edit Member");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 30, -1, -1));
+        jPanel3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 30, -1, -1));
 
         jButton3.setText("Delete");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -383,6 +384,10 @@ public class memberMenu extends javax.swing.JFrame {
 
         jLabel7.setText("Members");
         jPanel4.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, -1, -1));
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Mprofile.png"))); // NOI18N
+        jPanel4.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 60, 60));
 
         getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 90, 810, 120));
 
@@ -451,7 +456,7 @@ public class memberMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_nav4MouseClicked
 
     private void nav4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav4MouseEntered
-        nav5.setBackground(new Color (255, 249, 196));
+        nav4.setBackground(new Color (255, 249, 196));
     }//GEN-LAST:event_nav4MouseEntered
 
     private void nav4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav4MouseExited
@@ -477,7 +482,7 @@ public class memberMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_nav6MouseClicked
 
     private void nav6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav6MouseEntered
-        nav5.setBackground(new Color (255, 249, 196));
+        nav6.setBackground(new Color (255, 249, 196));
     }//GEN-LAST:event_nav6MouseEntered
 
     private void nav6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav6MouseExited
@@ -593,6 +598,7 @@ public class memberMenu extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton5;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
