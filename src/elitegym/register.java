@@ -19,11 +19,7 @@ public class register extends javax.swing.JFrame {
     public register() {
         initComponents();
         
-        birthdate.addKeyListener(new java.awt.event.KeyAdapter() {
-        public void keyReleased(java.awt.event.KeyEvent evt) {
-        formatBirthdate();
-    }
-});
+       
         pass1.setEchoChar('*');
         cpass.setEchoChar('*');
 
@@ -41,44 +37,67 @@ public class register extends javax.swing.JFrame {
         jRadioButton1.setSelected(true);
     }
     
-    private void formatBirthdate() {
-        
+    
+private void formatBirthdate() {
 
-        String text = birthdate.getText().replaceAll("[^0-9]", "");
-        
-        if (text.length() > 8) {
+    String text = birthdate.getText().replaceAll("[^0-9]", "");
+
+    if (text.length() > 8) {
         text = text.substring(0, 8);
-        }
+    }
 
-        StringBuilder sb = new StringBuilder();
+    StringBuilder sb = new StringBuilder();
 
-        if (text.length() > 0) {
-            sb.append(text.substring(0, Math.min(4, text.length())));
-        }
+    for (int i = 0; i < text.length(); i++) {
+        sb.append(text.charAt(i));
 
-        if (text.length() >= 5) {
+        if (i == 3 || i == 5) {
             sb.append("/");
-            sb.append(text.substring(4, Math.min(6, text.length())));
         }
+    }
 
-        if (text.length() >= 7) {
-            sb.append("/");
-            sb.append(text.substring(6, Math.min(8, text.length())));
-        }
-
+    // Prevent infinite resetting
+    if (!birthdate.getText().equals(sb.toString())) {
         birthdate.setText(sb.toString());
+    }
 }
     
-    private boolean isValidDate(String dateStr) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        formatter = formatter.withResolverStyle(java.time.format.ResolverStyle.STRICT);
+private boolean isValidDate(String dateStr) {
 
-        try {
-            LocalDate.parse(dateStr, formatter);
-            return true;
-        } catch (DateTimeParseException e) {
+    if (dateStr == null) return false;
+
+    dateStr = dateStr.trim();
+
+    if (!dateStr.matches("\\d{4}/\\d{2}/\\d{2}")) {
+        return false;
+    }
+
+    try {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        LocalDate birthDate = LocalDate.parse(dateStr, formatter);
+
+        LocalDate today = LocalDate.now();
+
+        // ❌ Future date not allowed
+        if (birthDate.isAfter(today)) {
             return false;
         }
+
+        // ❌ Too old (older than 100 years)
+        if (birthDate.isBefore(today.minusYears(100))) {
+            return false;
+        }
+
+        // ❌ Too young (less than 10 years old)
+        if (birthDate.isAfter(today.minusYears(10))) {
+            return false;
+        }
+
+        return true;
+
+    } catch (DateTimeParseException e) {
+        return false;
+    }
 }
 
 
@@ -332,43 +351,86 @@ public class register extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        String firstName = fname.getText().trim();
-        String lastName = lname.getText().trim();
-        String phoneNumber = phone.getText().trim();
-        String birth = birthdate.getText().trim();
-        String emailAddress = email2.getText().trim();
-        String password = new String(pass1.getPassword());       // Convert char[] to String
-        String confirmPassword = new String(cpass.getPassword()); // Convert char[] to String
-        String question = securityQuestion.getSelectedItem().toString().trim();
-        String answer = securityAnswer.getText().trim();
-        
-        if (!isValidDate(birth)) {
-        JOptionPane.showMessageDialog(this, "Invalid birthdate! Use YYYY/MM/DD");
+String firstName = fname.getText().trim();
+    String lastName = lname.getText().trim();
+    String phoneNumber = phone.getText().trim();
+    String birth = birthdate.getText().trim();
+    String emailAddress = email2.getText().trim();
+    String password = new String(pass1.getPassword());
+    String confirmPassword = new String(cpass.getPassword());
+    String question = securityQuestion.getSelectedItem().toString().trim();
+    String answer = securityAnswer.getText().trim();
+
+    // =========================
+    // BASIC EMPTY FIELD CHECK
+    // =========================
+    if (firstName.isEmpty() || lastName.isEmpty() || phoneNumber.isEmpty()
+            || birth.isEmpty() || emailAddress.isEmpty()
+            || password.isEmpty() || confirmPassword.isEmpty()
+            || answer.isEmpty()) {
+
+        JOptionPane.showMessageDialog(this, "All fields are required!");
         return;
-        }
+    }
 
-        // Get selected gender
-        String gender = jRadioButton1.isSelected() ? "Male" : "Female";
+    // =========================
+    // BIRTHDATE FORMAT CHECK
+    // =========================
+  if (birth.isEmpty()) {
+    JOptionPane.showMessageDialog(this, "Birthdate is required!");
+    return;
+}
 
-        // Get account type
-        String accountType = type.getSelectedItem().toString();
-        if(accountType.equals("(Choose Account Type)")) {
-            JOptionPane.showMessageDialog(this, "Please select an account type!");
-            return;
-        }
+if (!isValidDate(birth)) {
+    JOptionPane.showMessageDialog(this, "Invalid birthdate! Format must be YYYY/MM/DD");
+    return;
+}
 
-        config con = new config();
+    // =========================
+    // PASSWORD MATCH CHECK
+    // =========================
+    if (!password.equals(confirmPassword)) {
+        JOptionPane.showMessageDialog(this, "Passwords do not match!");
+        return;
+    }
 
-        // Validate register using String passwords
-        if (con.validateRegister(firstName, lastName, emailAddress, phoneNumber, birth,
-                password, confirmPassword, gender, accountType, question, answer)) {
-            JOptionPane.showMessageDialog(this, "Registration successful!");
-            new login().setVisible(true);
-            this.dispose();
-        } else {
-            JOptionPane.showMessageDialog(this, "Registration failed! Check your inputs.");
-        }
+    // =========================
+    // SECURITY QUESTION CHECK
+    // =========================
+    if (question.equals("(Security Question)")) {
+        JOptionPane.showMessageDialog(this, "Please select a security question!");
+        return;
+    }
 
+    // =========================
+    // ACCOUNT TYPE CHECK
+    // =========================
+    String accountType = type.getSelectedItem().toString();
+    if (accountType.equals("(Choose Account Type)")) {
+        JOptionPane.showMessageDialog(this, "Please select an account type!");
+        return;
+    }
+
+    // =========================
+    // GET GENDER
+    // =========================
+    String gender = jRadioButton1.isSelected() ? "Male" : "Female";
+
+    // =========================
+    // CALL DATABASE VALIDATION
+    // =========================
+    config con = new config();
+
+    if (con.validateRegister(firstName, lastName, emailAddress, phoneNumber, birth,
+            password, confirmPassword, gender, accountType, question, answer)) {
+
+        JOptionPane.showMessageDialog(this, "Registration successful!");
+        new login().setVisible(true);
+        this.dispose();
+
+    } else {
+        JOptionPane.showMessageDialog(this, "Registration failed! Check your inputs.");
+    }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked

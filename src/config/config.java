@@ -287,7 +287,7 @@ public boolean validateRegister(
         }
 
         // ===== INSERT NEW USER =====
-        String sqlInsert = "INSERT INTO tbl_accounts(U_firstname, U_lastname, U_email, U_phone, U_birthdate, U_gender, U_password, U_status, U_type, U_security_question, U_security_answer) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+        String sqlInsert = "INSERT INTO tbl_accounts(U_firstname, U_lastname, U_email, U_phone, U_birthdate, U_gender, U_password, U_status, U_type, security_question, security_answer) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
 
         try (PreparedStatement psInsert = conn.prepareStatement(sqlInsert)) {
             psInsert.setString(1, firstName);
