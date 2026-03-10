@@ -3,40 +3,51 @@ package config;
 import static config.config.connectDB;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import config.config;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class Services {
-    
-    public boolean addService(String name, String description, String duration, double price, String status) {
 
-    String sql = "INSERT INTO gym_services(service_name, description, duration, price, status) VALUES(?,?,?,?,?)";
+    // Add a new service
+    public boolean addService(String name, String description, String duration, String priceStr, int trainerId) {
+        double price = 0;
+        try {
+            price = Double.parseDouble(priceStr);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid price format: " + e.getMessage());
+            return false;
+        }
 
-    try (Connection conn = connectDB();
-         PreparedStatement pst = conn.prepareStatement(sql)) {
+        // Updated column name: trainer_id
+        String sql = "INSERT INTO gym_services(service_name, description, duration, price, trainer_id, status) " +
+                     "VALUES(?,?,?,?,?,?)";
 
-        pst.setString(1, name);
-        pst.setString(2, description);
-        pst.setString(3, duration);
-        pst.setDouble(4, price);
-        pst.setString(5, status);
+        try (Connection conn = connectDB();
+             PreparedStatement pst = conn.prepareStatement(sql)) {
 
-        pst.executeUpdate();
-        return true;
+            pst.setString(1, name);
+            pst.setString(2, description);
+            pst.setString(3, duration);
+            pst.setDouble(4, price);
+            pst.setInt(5, trainerId);
+            pst.setString(6, "Active");
 
-    } catch (SQLException e) {
-        System.out.println("Error adding service: " + e.getMessage());
-        return false;
+            pst.executeUpdate();
+            return true;
+
+        } catch (SQLException e) {
+            System.out.println("Error adding service: " + e.getMessage());
+            return false;
+        }
     }
-}
 
+    // Search services
     public void searchService(String keyword, JTable table) {
         String sql = "SELECT * FROM gym_services WHERE service_name LIKE ? OR description LIKE ?";
-        
-        try (Connection conn = config.connectDB();
+
+        try (Connection conn = connectDB();
              PreparedStatement pst = conn.prepareStatement(sql)) {
 
             String searchPattern = "%" + keyword + "%";
@@ -63,61 +74,61 @@ public class Services {
             System.out.println("Error searching service: " + e.getMessage());
         }
     }
-    
-public boolean updateServiceStatus(int id, String newStatus) {
-    String sql = "UPDATE gym_services SET status=? WHERE service_id=?";
-    try (Connection conn = config.connectDB();
-         PreparedStatement pst = conn.prepareStatement(sql)) {
-        pst.setString(1, newStatus);
-        pst.setInt(2, id);
-        return pst.executeUpdate() > 0;
-    } catch (Exception e) {
-        e.printStackTrace();
-        return false;
-    }
-}
 
-
-public boolean deleteService(int id) {
-    String sql = "DELETE FROM gym_services WHERE service_id=?";
-    try (Connection conn = connectDB();
-         PreparedStatement pst = conn.prepareStatement(sql)) {
-
-        pst.setInt(1, id);
-        pst.executeUpdate();
-        return true;
-
-    } catch (SQLException e) {
-        System.out.println("Error deleting service: " + e.getMessage());
-        return false;
-    }
-}
-
-public void loadActiveServices(JTable table) {
-
-    String sql = "SELECT service_id, service_name, description, duration, price " +
-                 "FROM gym_services WHERE status='Active'";
-
-    try (Connection conn = config.connectDB();
-         PreparedStatement pst = conn.prepareStatement(sql);
-         ResultSet rs = pst.executeQuery()) {
-
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.setRowCount(0);
-
-        while (rs.next()) {
-            model.addRow(new Object[]{
-                rs.getInt("service_id"),
-                rs.getString("service_name"),
-                rs.getString("description"),
-                rs.getString("duration"),
-                rs.getDouble("price")
-            });
+    // Update status (Active / Inactive)
+    public boolean updateServiceStatus(int id, String newStatus) {
+        String sql = "UPDATE gym_services SET status=? WHERE service_id=?";
+        try (Connection conn = connectDB();
+             PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setString(1, newStatus);
+            pst.setInt(2, id);
+            return pst.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
-
-    } catch (SQLException e) {
-        System.out.println("Error loading services: " + e.getMessage());
     }
-}
 
+    // Delete service
+    public boolean deleteService(int id) {
+        String sql = "DELETE FROM gym_services WHERE service_id=?";
+        try (Connection conn = connectDB();
+             PreparedStatement pst = conn.prepareStatement(sql)) {
+
+            pst.setInt(1, id);
+            pst.executeUpdate();
+            return true;
+
+        } catch (SQLException e) {
+            System.out.println("Error deleting service: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Load active services (for admin or general display)
+    public void loadActiveServices(JTable table) {
+        String sql = "SELECT service_id, service_name, description, duration, price " +
+                     "FROM gym_services WHERE status='Active'";
+
+        try (Connection conn = connectDB();
+             PreparedStatement pst = conn.prepareStatement(sql);
+             ResultSet rs = pst.executeQuery()) {
+
+            DefaultTableModel model = (DefaultTableModel) table.getModel();
+            model.setRowCount(0);
+
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getInt("service_id"),
+                    rs.getString("service_name"),
+                    rs.getString("description"),
+                    rs.getString("duration"),
+                    rs.getDouble("price")
+                });
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error loading services: " + e.getMessage());
+        }
+    }
 }

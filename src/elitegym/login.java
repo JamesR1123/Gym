@@ -215,10 +215,11 @@ public class login extends javax.swing.JFrame {
         // 5b. Set session
         Session session = Session.getInstance();
         session.setEmail(config.loggedInEmail != null ? config.loggedInEmail : email);
-        session.setType(config.loggedInType != null ? config.loggedInType : type);
+        session.setUserType(config.loggedInType != null ? config.loggedInType : type);
         session.setFirstName(config.loggedInFirstName != null ? config.loggedInFirstName : "");
         session.setLastName(config.loggedInLastName != null ? config.loggedInLastName : "");
-
+        
+        
         // 5c. Show welcome message
         JOptionPane.showMessageDialog(this,
                 "Login successful! Welcome " + session.getFullName(),
@@ -230,6 +231,8 @@ public class login extends javax.swing.JFrame {
             new admin.dashboard().setVisible(true);
         } else if (type.equalsIgnoreCase("Member")) {
             new member.memberDashB().setVisible(true);
+        }else if (type.equalsIgnoreCase("Trainer")) {
+            new trainer.trainerDashB().setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this,
                     "Unknown user type!",

@@ -40,64 +40,64 @@ public class register extends javax.swing.JFrame {
     
 private void formatBirthdate() {
 
-    String text = birthdate.getText().replaceAll("[^0-9]", "");
+        String text = birthdate.getText().replaceAll("[^0-9]", "");
 
-    if (text.length() > 8) {
-        text = text.substring(0, 8);
-    }
-
-    StringBuilder sb = new StringBuilder();
-
-    for (int i = 0; i < text.length(); i++) {
-        sb.append(text.charAt(i));
-
-        if (i == 3 || i == 5) {
-            sb.append("/");
+        if (text.length() > 8) {
+            text = text.substring(0, 8);
         }
-    }
 
-    // Prevent infinite resetting
-    if (!birthdate.getText().equals(sb.toString())) {
-        birthdate.setText(sb.toString());
-    }
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < text.length(); i++) {
+            sb.append(text.charAt(i));
+
+            if (i == 3 || i == 5) {
+                sb.append("/");
+            }
+        }
+
+        // Prevent infinite resetting
+        if (!birthdate.getText().equals(sb.toString())) {
+            birthdate.setText(sb.toString());
+        }
 }
     
 private boolean isValidDate(String dateStr) {
 
-    if (dateStr == null) return false;
+        if (dateStr == null) return false;
 
-    dateStr = dateStr.trim();
+        dateStr = dateStr.trim();
 
-    if (!dateStr.matches("\\d{4}/\\d{2}/\\d{2}")) {
-        return false;
-    }
-
-    try {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        LocalDate birthDate = LocalDate.parse(dateStr, formatter);
-
-        LocalDate today = LocalDate.now();
-
-        // ❌ Future date not allowed
-        if (birthDate.isAfter(today)) {
+        if (!dateStr.matches("\\d{4}/\\d{2}/\\d{2}")) {
             return false;
         }
 
-        // ❌ Too old (older than 100 years)
-        if (birthDate.isBefore(today.minusYears(100))) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            LocalDate birthDate = LocalDate.parse(dateStr, formatter);
+
+            LocalDate today = LocalDate.now();
+
+            // ❌ Future date not allowed
+            if (birthDate.isAfter(today)) {
+                return false;
+            }
+
+            // ❌ Too old (older than 100 years)
+            if (birthDate.isBefore(today.minusYears(100))) {
+                return false;
+            }
+
+            // ❌ Too young (less than 10 years old)
+            if (birthDate.isAfter(today.minusYears(10))) {
+                return false;
+            }
+
+            return true;
+
+        } catch (DateTimeParseException e) {
             return false;
         }
-
-        // ❌ Too young (less than 10 years old)
-        if (birthDate.isAfter(today.minusYears(10))) {
-            return false;
-        }
-
-        return true;
-
-    } catch (DateTimeParseException e) {
-        return false;
-    }
 }
 
 

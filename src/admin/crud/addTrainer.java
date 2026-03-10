@@ -134,7 +134,7 @@ public class addTrainer extends javax.swing.JFrame {
                 showPassMouseClicked(evt);
             }
         });
-        jPanel1.add(showPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 370, 50, 50));
+        jPanel1.add(showPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 370, 50, 50));
 
         hidePass.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         hidePass.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/blind-gray.png"))); // NOI18N
@@ -152,7 +152,7 @@ public class addTrainer extends javax.swing.JFrame {
                 cshowPassMouseClicked(evt);
             }
         });
-        jPanel1.add(cshowPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 450, 50, 50));
+        jPanel1.add(cshowPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 450, 50, 50));
 
         chidePass.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         chidePass.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/blind-gray.png"))); // NOI18N

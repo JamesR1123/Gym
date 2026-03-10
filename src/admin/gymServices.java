@@ -6,6 +6,8 @@ import config.Services;
 import java.awt.Color;
 import java.awt.Cursor;
 import elitegym.login;
+import gymServices.crud.addServicesAdmin;
+import gymServices.crud.editServicesAdmin;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,47 +38,77 @@ public class gymServices extends javax.swing.JFrame {
     
     }
     
-    
-    
-   public void loadServices() {
-    try (Connection conn = config.connectDB();
-         PreparedStatement pst = conn.prepareStatement("SELECT * FROM gym_services");
-         ResultSet rs = pst.executeQuery()) {
-
-        // Set up table model with correct columns
-        DefaultTableModel model = new DefaultTableModel(
-            new Object[] { "ID", "Service Name", "Description", "Duration", "Price", "Status" }, 0
-        );
-        servicetable.setModel(model); // apply new model
-
-        int total = 0, active = 0, inactive = 0;
-
-        while (rs.next()) {
-            total++;
-            String status = rs.getString("status");
-            if (status.equalsIgnoreCase("Active")) active++;
-            else inactive++;
-
-            model.addRow(new Object[]{
-                rs.getInt("service_id"),
-                rs.getString("service_name"),
-                rs.getString("description"),
-                rs.getString("duration"),
-                rs.getDouble("price"),
-                status
-            });
+ private String formatDuration(String duration) {
+        try {
+            int minutes = Integer.parseInt(duration);
+            int hours = minutes / 60;
+            minutes = minutes % 60;
+            String result = "";
+            if (hours > 0) result += hours + " hr ";
+            if (minutes > 0) result += minutes + " min";
+            return result.trim();
+        } catch (NumberFormatException e) {
+            return duration; // fallback if parsing fails
         }
-
-
-        Tservise.setText(String.valueOf(total));
-        Aservice.setText(String.valueOf(active));
-        Iservices.setText(String.valueOf(inactive));
-
-    } catch (Exception e) {
-        e.printStackTrace();
-        javax.swing.JOptionPane.showMessageDialog(this, "Error loading services: " + e.getMessage());
     }
-}
+    
+    
+
+    // ====================== LOAD SERVICES FROM DATABASE ======================
+    public void loadServices() {
+
+        DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(new String[]{
+            "ID", "Trainer Name", "Service Name", "Description", "Price", "Duration", "Status"
+        });
+
+        String sql = "SELECT gs.service_id, " +
+                     "a.U_firstname || ' ' || a.U_lastname AS trainer_name, " +
+                     "gs.service_name, gs.description, gs.price, gs.duration, gs.status " +
+                     "FROM gym_services gs " +
+                     "LEFT JOIN tbl_accounts a ON gs.trainer_id = a.U_id";
+
+        try (Connection conn = config.connectDB();
+             PreparedStatement pst = conn.prepareStatement(sql);
+             ResultSet rs = pst.executeQuery()) {
+
+            int total = 0;
+            int active = 0;
+            int inactive = 0;
+
+            while (rs.next()) {
+                int id = rs.getInt("service_id");
+                String trainerName = rs.getString("trainer_name");
+                String name = rs.getString("service_name");
+                String desc = rs.getString("description");
+                double price = rs.getDouble("price");
+
+                // Format duration nicely
+                String durationRaw = rs.getString("duration");
+                String duration = formatDuration(durationRaw);
+
+                String status = rs.getString("status");
+
+                model.addRow(new Object[]{id, trainerName, name, desc, price, duration, status});
+
+                total++;
+                if ("Active".equalsIgnoreCase(status)) active++;
+                else inactive++;
+            }
+
+            servicetable.setModel(model);
+
+            Tservise.setText(String.valueOf(total));
+            Aservice.setText(String.valueOf(active));
+            Iservices.setText(String.valueOf(inactive));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Error loading services: " + e.getMessage());
+        }
+    }
+
 
 
    
@@ -125,6 +157,7 @@ public class gymServices extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setSize(new java.awt.Dimension(1010, 680));
@@ -355,29 +388,29 @@ public class gymServices extends javax.swing.JFrame {
 
         jPanel3.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 800, 390));
 
-        jButton1.setText("Delete Services");
+        jButton1.setText("Delete");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 30, -1, -1));
+        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 30, -1, -1));
 
-        jButton2.setText("Activate Services");
+        jButton2.setText("Add Services");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 150, -1));
+        jPanel3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 30, 150, -1));
 
-        jButton3.setText("Deactivate Services");
+        jButton3.setText("Edit");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 30, -1, -1));
+        jPanel3.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 30, -1, -1));
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -388,6 +421,14 @@ public class gymServices extends javax.swing.JFrame {
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/search.png"))); // NOI18N
         jPanel3.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 30, 30, 30));
+
+        jButton4.setText("Refresh");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        jPanel3.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, -1, -1));
 
         getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 200, 820, 480));
 
@@ -427,7 +468,7 @@ public class gymServices extends javax.swing.JFrame {
     }//GEN-LAST:event_nav1MouseEntered
 
     private void nav1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav1MouseClicked
-        gymServices db = new gymServices();
+        dashboard db = new dashboard();
         db.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_nav1MouseClicked
@@ -452,60 +493,59 @@ public class gymServices extends javax.swing.JFrame {
     }//GEN-LAST:event_nav3MouseExited
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // Activate selected service
-        int selectedRow = servicetable.getSelectedRow();
-        if (selectedRow != -1) {
-            int id = (int) servicetable.getValueAt(selectedRow, 0); // ID column
-            Services svc = new Services();
-            if (svc.updateServiceStatus(id, "Active")) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Service activated.");
-                loadServices();
-            } else {
-                javax.swing.JOptionPane.showMessageDialog(this, "Failed to activate service.");
-            }
-        } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Select a service to activate.");
-        }
+            // Open Add Service form
+        addServicesAdmin addForm = new addServicesAdmin();
+        addForm.setVisible(true);
+       
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // Deactivate selected service
         int selectedRow = servicetable.getSelectedRow();
         if (selectedRow != -1) {
-            int id = (int) servicetable.getValueAt(selectedRow, 0); // ID column
-            Services svc = new Services();
-            if (svc.updateServiceStatus(id, "Inactive")) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Service deactivated.");
-                loadServices();
-            } else {
-                javax.swing.JOptionPane.showMessageDialog(this, "Failed to deactivate service.");
-            }
+             int id = (int) servicetable.getValueAt(selectedRow, 0); // get service ID
+             editServicesAdmin editForm = new editServicesAdmin(id, this); // pass parent
+             editForm.setVisible(true);
         } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Select a service to deactivate.");
+             javax.swing.JOptionPane.showMessageDialog(this, "Select a service to edit.");
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-    String keyword = jTextField1.getText().trim();
-    Services svc = new Services();
-    if (!keyword.isEmpty()) {
-        svc.searchService(keyword, servicetable);
-    } else {
-        loadServices(); // reload all if empty
-    }
+        String keyword = jTextField1.getText().trim();
+        Services svc = new Services();
+        if (!keyword.isEmpty()) {
+            svc.searchService(keyword, servicetable);
+        } else {
+            loadServices(); // reload all if empty
+        }
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    int selectedRow = servicetable.getSelectedRow();
-    if (selectedRow != -1) {
-        int id = (int) servicetable.getValueAt(selectedRow, 0); // ID column
-        Services svc = new Services();
-        if (svc.deleteService(id)) {
-            loadServices(); // refresh table
+        int selectedRow = servicetable.getSelectedRow();
+        if (selectedRow != -1) {
+            int id = (int) servicetable.getValueAt(selectedRow, 0); // ID column
+
+            // Show confirmation dialog
+            int confirm = javax.swing.JOptionPane.showConfirmDialog(
+                    this,
+                    "Are you sure you want to delete this service?",
+                    "Confirm Delete",
+                    javax.swing.JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+                Services svc = new Services();
+                if (svc.deleteService(id)) {
+                    loadServices(); // refresh table
+                    javax.swing.JOptionPane.showMessageDialog(this, "Service deleted successfully.");
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Failed to delete service.");
+                }
+            } // else do nothing if No is selected
+
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Select a service to delete.");
         }
-    } else {
-        javax.swing.JOptionPane.showMessageDialog(this, "Select a service to delete.");
-    }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void nav5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav5MouseClicked
@@ -544,6 +584,10 @@ public class gymServices extends javax.swing.JFrame {
         nav4.setBackground(new Color(30,30,30));
     }//GEN-LAST:event_nav4MouseExited
 
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        loadServices(); // reload the table with latest data
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     
     public static void main(String args[]) {
         
@@ -578,6 +622,7 @@ public class gymServices extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

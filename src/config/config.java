@@ -15,7 +15,8 @@ public class config {
     public static String loggedInLastName;
     public static String loggedInEmail;
     public static String loggedInType;
-
+    public static int loggedInUserId; 
+    
     // ================= DATABASE CONNECTION =================
     public static Connection connectDB() {
         Connection con = null;
@@ -86,31 +87,41 @@ public class config {
 
     // ================= SET LOGGED-IN USER =================
     public static void setLoggedInUser(String email, String password) {
-        String sql = "SELECT U_firstname, U_lastname, U_email, U_type FROM tbl_accounts WHERE U_email=? AND U_password=?";
-        try (Connection conn = connectDB();
-             PreparedStatement pst = conn.prepareStatement(sql)) {
+    String sql = "SELECT U_id, U_firstname, U_lastname, U_email, U_type FROM tbl_accounts WHERE U_email=? AND U_password=?";
+    try (Connection conn = connectDB();
+         PreparedStatement pst = conn.prepareStatement(sql)) {
 
-            pst.setString(1, email);
-            pst.setString(2, password);
+        pst.setString(1, email);
+        pst.setString(2, password);
 
-            try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    loggedInFirstName = rs.getString("U_firstname");
-                    loggedInLastName = rs.getString("U_lastname");
-                    loggedInEmail = rs.getString("U_email");
-                    loggedInType = rs.getString("U_type");
-                } else {
-                    loggedInFirstName = "";
-                    loggedInLastName = "";
-                    loggedInEmail = "";
-                    loggedInType = "";
-                }
+        try (ResultSet rs = pst.executeQuery()) {
+            if (rs.next()) {
+                loggedInUserId = rs.getInt("U_id"); // store actual ID
+                loggedInFirstName = rs.getString("U_firstname");
+                loggedInLastName = rs.getString("U_lastname");
+                loggedInEmail = rs.getString("U_email");
+                loggedInType = rs.getString("U_type");
+
+                // Update session as well
+                Session session = Session.getInstance();
+                session.setUserId(loggedInUserId);
+                session.setFirstName(loggedInFirstName);
+                session.setLastName(loggedInLastName);
+                session.setEmail(loggedInEmail);
+                session.setUserType(loggedInType);
+            } else {
+                loggedInUserId = 0;
+                loggedInFirstName = "";
+                loggedInLastName = "";
+                loggedInEmail = "";
+                loggedInType = "";
             }
-
-        } catch (SQLException e) {
-            System.out.println("Error setting logged-in user: " + e.getMessage());
         }
+
+    } catch (Exception e) {
+        System.out.println("Error setting logged-in user: " + e.getMessage());
     }
+}
 
     // ================= GET FULL NAME =================
     public static String getFullName() {
