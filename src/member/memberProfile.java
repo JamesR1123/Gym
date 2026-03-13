@@ -41,8 +41,10 @@ public class memberProfile extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        nav5 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         fullname = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -72,7 +74,7 @@ public class memberProfile extends javax.swing.JFrame {
         nav2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Profile");
+        jLabel7.setText("My Transaction");
         nav2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
         jPanel1.add(nav2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 270, 170, 40));
@@ -113,7 +115,7 @@ public class memberProfile extends javax.swing.JFrame {
         nav4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("My Transaction");
+        jLabel9.setText("Payment");
         nav4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
         jPanel1.add(nav4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 340, 170, 40));
@@ -165,12 +167,32 @@ public class memberProfile extends javax.swing.JFrame {
         jLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Services.png"))); // NOI18N
         jPanel1.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 50, 50));
 
-        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Proofile.png"))); // NOI18N
-        jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, 50, 50));
-
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dashBlogo.png"))); // NOI18N
         jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(-90, 30, 280, 150));
+
+        nav5.setBackground(new java.awt.Color(30, 30, 30));
+        nav5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nav5MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                nav5MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                nav5MouseExited(evt);
+            }
+        });
+        nav5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Profile");
+        nav5.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+
+        jPanel1.add(nav5, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 410, 170, 40));
+
+        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Proofile.png"))); // NOI18N
+        jPanel1.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 405, 50, 50));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 230, 700));
         jPanel1.getAccessibleContext().setAccessibleName("");
@@ -239,7 +261,9 @@ public class memberProfile extends javax.swing.JFrame {
     }//GEN-LAST:event_nav3MouseExited
 
     private void nav2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav2MouseClicked
-
+        memberTransaction mi = new memberTransaction();
+        mi.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_nav2MouseClicked
 
     private void nav2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav2MouseEntered
@@ -251,7 +275,7 @@ public class memberProfile extends javax.swing.JFrame {
     }//GEN-LAST:event_nav2MouseExited
 
     private void nav4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav4MouseClicked
-        memberTransaction mi = new memberTransaction();
+        memberPayment mi = new memberPayment();
         mi.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_nav4MouseClicked
@@ -278,6 +302,20 @@ public class memberProfile extends javax.swing.JFrame {
     private void logoutMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseExited
         logout.setBackground(new Color (240, 240, 240));
     }//GEN-LAST:event_logoutMouseExited
+
+    private void nav5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav5MouseClicked
+        memberProfile me = new memberProfile();
+        me.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_nav5MouseClicked
+
+    private void nav5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav5MouseEntered
+        nav2.setBackground(new Color (255, 249, 196));
+    }//GEN-LAST:event_nav5MouseEntered
+
+    private void nav5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav5MouseExited
+        nav2.setBackground(new Color(30,30,30));
+    }//GEN-LAST:event_nav5MouseExited
 
     
     public static void main(String args[]) {
@@ -318,7 +356,7 @@ public class memberProfile extends javax.swing.JFrame {
     private javax.swing.JLabel fullname;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
@@ -327,6 +365,7 @@ public class memberProfile extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
@@ -335,6 +374,7 @@ public class memberProfile extends javax.swing.JFrame {
     private javax.swing.JPanel nav2;
     private javax.swing.JPanel nav3;
     private javax.swing.JPanel nav4;
+    private javax.swing.JPanel nav5;
     private javax.swing.JLabel type;
     // End of variables declaration//GEN-END:variables
 }

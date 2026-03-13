@@ -7,10 +7,15 @@ import config.config;
 import java.awt.Color;
 import java.awt.Cursor;
 import elitegym.login;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
-public class trainerManager extends javax.swing.JFrame {
+public class trainerClientRequest extends javax.swing.JFrame {
    
-    public trainerManager(){
+    public trainerClientRequest(){
         Session session = Session.getInstance();
         if (!Session.getInstance().isLoggedIn()) {
         new login().setVisible(true);
@@ -18,12 +23,8 @@ public class trainerManager extends javax.swing.JFrame {
         return;
     }
          
-
         initComponents();
-        
-        String name = Session.getInstance().getFullName();
-        if(name.isEmpty()) name = "Trainer";
-        welcome.setText("Welcome " + name);
+        loadClientRequests();
         
         nav1.setOpaque(true);
         nav2.setOpaque(true);
@@ -37,6 +38,54 @@ public class trainerManager extends javax.swing.JFrame {
   
     
     }
+    
+    public void loadClientRequests() {
+    DefaultTableModel model = new DefaultTableModel();
+    model.setColumnIdentifiers(new String[]{
+        "ID", "Member Name", "Service", "Date", "Status", "Type"
+    });
+
+    int trainerId = Session.getInstance().getUserId(); // Logged-in trainer ID
+    System.out.println("Trainer ID from session: " + trainerId);
+
+    String sql = "SELECT t.transaction_id AS id, " +
+                 "m.U_firstname || ' ' || m.U_lastname AS member_name, " +
+                 "gs.service_name, t.transaction_date AS date, t.status, 'Transaction' AS type " +
+                 "FROM transactions t " +
+                 "JOIN tbl_accounts m ON t.member_id = m.U_id " +
+                 "JOIN gym_services gs ON t.service_id = gs.service_id " +
+                 "WHERE t.trainer_id = ? AND t.status = 'Pending' " +
+                 "ORDER BY t.transaction_date DESC";
+
+    try (Connection conn = config.connectDB();
+         PreparedStatement pst = conn.prepareStatement(sql)) {
+
+        pst.setInt(1, trainerId);
+        ResultSet rs = pst.executeQuery();
+        int count = 0;
+
+        while (rs.next()) {
+            count++;
+            model.addRow(new Object[]{
+                rs.getInt("id"),
+                rs.getString("member_name"),
+                rs.getString("service_name"),
+                rs.getString("date"),
+                rs.getString("status"),
+                rs.getString("type")
+            });
+        }
+
+        System.out.println("Total entries loaded: " + count);
+        ClientsRequest.setModel(model);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Failed to load client requests: " + e.getMessage());
+    }
+}
+
+
     
    
    
@@ -57,12 +106,18 @@ public class trainerManager extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        nav5 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
-        welcome = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        ClientsRequest = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -106,7 +161,7 @@ public class trainerManager extends javax.swing.JFrame {
         nav2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Profile");
+        jLabel3.setText("Client Request");
         nav2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
         jPanel2.add(nav2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 270, 170, 40));
@@ -178,31 +233,86 @@ public class trainerManager extends javax.swing.JFrame {
         jLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Services.png"))); // NOI18N
         jPanel2.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 50, 50));
 
-        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Proofile.png"))); // NOI18N
-        jPanel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, 50, 50));
-
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dashBlogo.png"))); // NOI18N
         jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(-90, 30, 280, 150));
+
+        nav5.setBackground(new java.awt.Color(30, 30, 30));
+        nav5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nav5MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                nav5MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                nav5MouseExited(evt);
+            }
+        });
+        nav5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("Profile");
+        nav5.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+
+        jPanel2.add(nav5, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 410, 170, 40));
+
+        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Proofile.png"))); // NOI18N
+        jPanel2.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 405, 50, 50));
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 230, 700));
 
         jPanel1.setBackground(new java.awt.Color(255, 235, 150));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel13.setText("Member Dashboard");
+        jLabel13.setText("Trainer Dashboard");
         jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 300, -1));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, 770, 60));
 
-        jPanel3.setBackground(new java.awt.Color(255, 235, 150));
-        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel4.setBackground(new java.awt.Color(255, 235, 150));
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        welcome.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        welcome.setText("Welcome");
-        jPanel3.add(welcome, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 390, 50));
+        ClientsRequest.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(ClientsRequest);
 
-        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 80, 770, 600));
+        jPanel4.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 750, 490));
+
+        jButton1.setText("Accept");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 30, -1, -1));
+
+        jButton2.setText("Deny");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 30, -1, -1));
+
+        jButton3.setText("Refresh");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, -1, -1));
+
+        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 80, 770, 580));
 
         pack();
         setLocationRelativeTo(null);
@@ -240,16 +350,12 @@ public class trainerManager extends javax.swing.JFrame {
     }//GEN-LAST:event_nav1MouseEntered
 
     private void nav1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav1MouseClicked
-        
-        trainerDashB das = new trainerDashB();
-        das.setVisible(true);
-        this.dispose();
-        
+   
     }//GEN-LAST:event_nav1MouseClicked
 
     private void nav2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav2MouseClicked
         
-        trainerProfile pro = new trainerProfile();
+        trainerClientRequest pro = new trainerClientRequest();
         pro.setVisible(true);
         this.dispose();
         
@@ -282,6 +388,103 @@ public class trainerManager extends javax.swing.JFrame {
         nav4.setBackground(new Color(30,30,30));
     }//GEN-LAST:event_nav4MouseExited
 
+    private void nav5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav5MouseClicked
+        trainerProfile pro = new trainerProfile();
+        pro.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_nav5MouseClicked
+
+    private void nav5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav5MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nav5MouseEntered
+
+    private void nav5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav5MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nav5MouseExited
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        
+      int selectedRow = ClientsRequest.getSelectedRow();
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select a transaction to accept.");
+        return;
+    }
+
+    String status = (String) ClientsRequest.getValueAt(selectedRow, 4); // Status column
+    if (!status.equals("Pending")) {
+        JOptionPane.showMessageDialog(this, "Only pending transactions can be accepted.");
+        return;
+    }
+
+    int transactionId = (int) ClientsRequest.getValueAt(selectedRow, 0);
+    String memberName = (String) ClientsRequest.getValueAt(selectedRow, 1);
+
+    int confirm = JOptionPane.showConfirmDialog(this,
+            "Accept this transaction for " + memberName + "?",
+            "Confirm Accept", JOptionPane.YES_NO_OPTION);
+
+    if (confirm != JOptionPane.YES_OPTION) return;
+
+    try (Connection conn = config.connectDB()) {
+        String sqlUpdate = "UPDATE transactions SET status = 'Pending Payment' WHERE transaction_id = ?";
+        PreparedStatement pst = conn.prepareStatement(sqlUpdate);
+        pst.setInt(1, transactionId);
+        pst.executeUpdate();
+
+        JOptionPane.showMessageDialog(this, "Transaction approved successfully.");
+        loadClientRequests(); // Refresh table
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error updating transaction: " + e.getMessage());
+    }
+    
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        loadClientRequests(); // Simply reload the table
+        JOptionPane.showMessageDialog(this, "Transactions refreshed.");
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        
+        int selectedRow = ClientsRequest.getSelectedRow();
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select a transaction to deny.");
+        return;
+    }
+
+    String status = (String) ClientsRequest.getValueAt(selectedRow, 4); // Status column
+    if (!status.equals("Pending")) {
+        JOptionPane.showMessageDialog(this, "Only pending transactions can be denied.");
+        return;
+    }
+
+    int transactionId = (int) ClientsRequest.getValueAt(selectedRow, 0);
+    String memberName = (String) ClientsRequest.getValueAt(selectedRow, 1);
+
+    int confirm = JOptionPane.showConfirmDialog(this,
+            "Are you sure you want to deny this transaction for " + memberName + "?",
+            "Confirm Deny", JOptionPane.YES_NO_OPTION);
+
+    if (confirm != JOptionPane.YES_OPTION) return;
+
+    try (Connection conn = config.connectDB()) {
+        String sqlUpdate = "UPDATE transactions SET status = 'Denied' WHERE transaction_id = ?";
+        PreparedStatement pst = conn.prepareStatement(sqlUpdate);
+        pst.setInt(1, transactionId);
+        pst.executeUpdate();
+
+        JOptionPane.showMessageDialog(this, "Transaction denied successfully.");
+        loadClientRequests(); // Refresh table
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error updating transaction: " + e.getMessage());
+    }
+    
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     
     public static void main(String args[]) {
         
@@ -293,26 +496,30 @@ public class trainerManager extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(trainerManager.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(trainerClientRequest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(trainerManager.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(trainerClientRequest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(trainerManager.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(trainerClientRequest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(trainerManager.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(trainerClientRequest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new trainerManager().setVisible(true);
+                new trainerClientRequest().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable ClientsRequest;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
@@ -320,14 +527,16 @@ public class trainerManager extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel logout;
     private javax.swing.JPanel nav1;
     private javax.swing.JPanel nav2;
     private javax.swing.JPanel nav3;
     private javax.swing.JPanel nav4;
-    private javax.swing.JLabel welcome;
+    private javax.swing.JPanel nav5;
     // End of variables declaration//GEN-END:variables
 }

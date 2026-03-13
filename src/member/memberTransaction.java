@@ -7,6 +7,8 @@ import config.config;
 import java.awt.Color;
 import java.awt.Cursor;
 import elitegym.login;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
 
 public class memberTransaction extends javax.swing.JFrame {
@@ -19,13 +21,10 @@ public class memberTransaction extends javax.swing.JFrame {
         return;
     }
          
-
+        
         initComponents();
         
-        transactionTable.setModel(new javax.swing.table.DefaultTableModel(
-        new Object [][] {},
-        new String [] { "Transaction ID", "Service Name", "Amount", "Status", "Date" }
-    ));
+        
        
         
         nav1.setOpaque(true);
@@ -37,7 +36,8 @@ public class memberTransaction extends javax.swing.JFrame {
         nav2.setCursor(new Cursor(Cursor.HAND_CURSOR));
         logout.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-        new Transactions().loadMyTransactions(session.getEmail(), transactionTable);
+        int memberId = Session.getInstance().getUserId();  // get the logged-in member's ID
+        new Transactions().loadMyTransactions(memberId, transactionTable);
 
     
     }
@@ -61,15 +61,16 @@ public class memberTransaction extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        nav5 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         transactionTable = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -113,7 +114,7 @@ public class memberTransaction extends javax.swing.JFrame {
         nav2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Profile");
+        jLabel3.setText("My transaction");
         nav2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
         jPanel2.add(nav2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 270, 170, 40));
@@ -153,7 +154,7 @@ public class memberTransaction extends javax.swing.JFrame {
         nav4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("My Transaction");
+        jLabel6.setText("Payment");
         nav4.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
         jPanel2.add(nav4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 340, 170, 40));
@@ -185,12 +186,32 @@ public class memberTransaction extends javax.swing.JFrame {
         jLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Services.png"))); // NOI18N
         jPanel2.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 50, 50));
 
-        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Proofile.png"))); // NOI18N
-        jPanel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, 50, 50));
-
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dashBlogo.png"))); // NOI18N
         jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(-90, 30, 280, 150));
+
+        nav5.setBackground(new java.awt.Color(30, 30, 30));
+        nav5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nav5MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                nav5MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                nav5MouseExited(evt);
+            }
+        });
+        nav5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Profile");
+        nav5.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+
+        jPanel2.add(nav5, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 410, 170, 40));
+
+        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Proofile.png"))); // NOI18N
+        jPanel2.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 405, 50, 50));
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 230, 700));
 
@@ -218,23 +239,15 @@ public class memberTransaction extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(transactionTable);
 
-        jPanel3.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, 750, 450));
+        jPanel3.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 750, 500));
 
-        jButton1.setText("Update Transaction");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButton3.setText("Cancel Transaction");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButton3ActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 180, 40));
-
-        jButton2.setText("Delete Transaction");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-        jPanel3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 60, 170, 40));
+        jPanel3.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 30, -1, -1));
 
         getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 80, 770, 600));
 
@@ -280,8 +293,8 @@ public class memberTransaction extends javax.swing.JFrame {
     }//GEN-LAST:event_nav1MouseClicked
 
     private void nav2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav2MouseClicked
-        memberProfile me = new memberProfile();
-        me.setVisible(true);
+        memberTransaction mw = new memberTransaction();
+        mw.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_nav2MouseClicked
 
@@ -299,7 +312,7 @@ public class memberTransaction extends javax.swing.JFrame {
     }//GEN-LAST:event_nav3MouseExited
 
     private void nav4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav4MouseClicked
-        memberTransaction mw = new memberTransaction();
+        memberPayment mw = new memberPayment();
         mw.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_nav4MouseClicked
@@ -312,67 +325,76 @@ public class memberTransaction extends javax.swing.JFrame {
         nav4.setBackground(new Color(30,30,30));
     }//GEN-LAST:event_nav4MouseExited
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-      int selectedRow = transactionTable.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Please select a transaction to update.");
-            return;
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        
+        int selectedRow = transactionTable.getSelectedRow();
+    
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select a transaction to cancel.", 
+                                      "No Selection", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Get the transaction ID from the table
+    int transactionId = (int) transactionTable.getValueAt(selectedRow, 0);
+    String status = (String) transactionTable.getValueAt(selectedRow, 4);
+
+    // Only allow cancelling pending transactions
+    if (!status.equalsIgnoreCase("Pending")) {
+        JOptionPane.showMessageDialog(this, "Only pending transactions can be cancelled.", 
+                                      "Cannot Cancel", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Confirm cancellation
+    int confirm = JOptionPane.showConfirmDialog(this, 
+                    "Are you sure you want to cancel this transaction?", 
+                    "Confirm Cancellation", JOptionPane.YES_NO_OPTION);
+
+    if (confirm != JOptionPane.YES_OPTION) {
+        return;
+    }
+
+    // Update the transaction status in the database
+    try (Connection conn = config.connectDB();
+         PreparedStatement pst = conn.prepareStatement(
+             "UPDATE transactions SET status = ? WHERE transaction_id = ?")) {
+
+        pst.setString(1, "Available");
+        pst.setInt(2, transactionId);
+
+        int updated = pst.executeUpdate();
+        if (updated > 0) {
+            JOptionPane.showMessageDialog(this, "Transaction cancelled successfully.", 
+                                          "Success", JOptionPane.INFORMATION_MESSAGE);
+            // Reload table
+            new Transactions().loadMyTransactions(Session.getInstance().getUserId(), transactionTable);
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to cancel the transaction.", 
+                                          "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        String status = (String) transactionTable.getValueAt(selectedRow, 3);
-        if (!status.equals("Pending")) {
-            JOptionPane.showMessageDialog(this, "Only pending transactions can be updated.");
-            return;
-        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error cancelling transaction: " + e.getMessage(), 
+                                      "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    }//GEN-LAST:event_jButton3ActionPerformed
 
-        int transactionId = (int) transactionTable.getValueAt(selectedRow, 0);
-        double currentAmount = (double) transactionTable.getValueAt(selectedRow, 2);
+    private void nav5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav5MouseClicked
+        memberProfile me = new memberProfile();
+        me.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_nav5MouseClicked
 
-        String newAmountStr = JOptionPane.showInputDialog(this, "Enter new amount:", currentAmount);
-        if (newAmountStr != null) {
-            try {
-                double newAmount = Double.parseDouble(newAmountStr);
-                boolean success = new Transactions().updateTransactionAmount(
-                        transactionId, Session.getInstance().getEmail(), newAmount);
+    private void nav5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav5MouseEntered
+        nav2.setBackground(new Color (255, 249, 196));
+    }//GEN-LAST:event_nav5MouseEntered
 
-                if (success) {
-                    JOptionPane.showMessageDialog(this, "Transaction updated successfully.");
-                    new Transactions().loadMyTransactions(Session.getInstance().getEmail(), transactionTable);
-                } else {
-                    JOptionPane.showMessageDialog(this, "Failed to update transaction.");
-                }
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Invalid amount entered.");
-            }
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-       int selectedRow = transactionTable.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Please select a transaction to delete.");
-            return;
-        }
-
-        String status = (String) transactionTable.getValueAt(selectedRow, 3);
-        if (!status.equals("Pending")) {
-            JOptionPane.showMessageDialog(this, "Only pending transactions can be deleted.");
-            return;
-        }
-
-        int transactionId = (int) transactionTable.getValueAt(selectedRow, 0);
-        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this transaction?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
-
-        if (confirm == JOptionPane.YES_OPTION) {
-            boolean success = new Transactions().deleteTransaction(transactionId, Session.getInstance().getEmail());
-            if (success) {
-                JOptionPane.showMessageDialog(this, "Transaction deleted successfully.");
-                new Transactions().loadMyTransactions(Session.getInstance().getEmail(), transactionTable);
-            } else {
-                JOptionPane.showMessageDialog(this, "Failed to delete transaction.");
-            }
-        }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void nav5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav5MouseExited
+        nav2.setBackground(new Color(30,30,30));
+    }//GEN-LAST:event_nav5MouseExited
 
     
     public static void main(String args[]) {
@@ -402,11 +424,10 @@ public class memberTransaction extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
@@ -414,6 +435,7 @@ public class memberTransaction extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -423,6 +445,7 @@ public class memberTransaction extends javax.swing.JFrame {
     private javax.swing.JPanel nav2;
     private javax.swing.JPanel nav3;
     private javax.swing.JPanel nav4;
+    private javax.swing.JPanel nav5;
     private javax.swing.JTable transactionTable;
     // End of variables declaration//GEN-END:variables
 }

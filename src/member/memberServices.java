@@ -30,11 +30,10 @@ public class memberServices extends javax.swing.JFrame {
         serviceTable.setModel(new javax.swing.table.DefaultTableModel(
         new Object [][] {},
         new String [] {
-        "Service ID", "Service Name", "Category", "Duration", "Price"
+        "Service ID", "Trainer", "Service Name", "Description", "Duration", "Price"
         }
     ));
-        Services services = new Services();
-        services.loadActiveServices(serviceTable);
+       loadServices(); 
         
         nav1.setOpaque(true);
         nav2.setOpaque(true);
@@ -47,30 +46,70 @@ public class memberServices extends javax.swing.JFrame {
         
     }
 
-    public void loadServices() {
-    String sql = "SELECT * FROM services"; // or gym_services if that's your table
+   public void loadServices() {
+    String sql = "SELECT gs.service_id, " +
+                 "t.U_firstname || ' ' || t.U_lastname AS trainer_name, " +
+                 "gs.service_name, gs.description, gs.duration, gs.price " +
+                 "FROM gym_services gs " +
+                 "LEFT JOIN tbl_accounts t ON gs.trainer_id = t.U_id " +
+                 "WHERE gs.service_id NOT IN ( " +
+                 "    SELECT service_id FROM member_services " +
+                 "    WHERE member_id = ? " +
+                 ")";
 
     try (Connection conn = config.connectDB();
-         PreparedStatement pst = conn.prepareStatement(sql);
-         ResultSet rs = pst.executeQuery()) {
+         PreparedStatement pst = conn.prepareStatement(sql)) {
 
-        DefaultTableModel model = (DefaultTableModel) serviceTable.getModel();
-        model.setRowCount(0);
+        pst.setInt(1, Session.getInstance().getUserId()); // bind logged-in member's ID
 
-        while (rs.next()) {
-            model.addRow(new Object[]{
-                rs.getInt("service_id"),
-                rs.getString("service_name"),
-                rs.getString("category"),
-                rs.getString("duration"),
-                rs.getDouble("price")
+        try (ResultSet rs = pst.executeQuery()) {
+
+            DefaultTableModel model = new DefaultTableModel();
+            model.setColumnIdentifiers(new String[]{
+                "Service ID", "Trainer", "Service Name", "Description", "Duration", "Price"
             });
+
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getInt("service_id"),
+                    rs.getString("trainer_name"),
+                    rs.getString("service_name"),
+                    rs.getString("description"),
+                    formatDuration(rs.getString("duration")),
+                    rs.getDouble("price")
+                });
+            }
+
+            serviceTable.setModel(model);
+            serviceTable.getTableHeader().repaint();
         }
 
     } catch (Exception e) {
         e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Failed to load services: " + e.getMessage());
     }
 }
+
+    
+
+    private String formatDuration(String duration) {
+        try {
+            int totalMinutes = Integer.parseInt(duration);
+            int hours = totalMinutes / 60;
+            int minutes = totalMinutes % 60;
+            String result = "";
+            if (hours > 0) result += hours + " hr ";
+            if (minutes > 0) result += minutes + " min";
+            return result.trim();
+        } catch (Exception e) {
+            return duration;
+        }
+    }
+
+    
+    
+
+
 
 
    
@@ -92,8 +131,10 @@ public class memberServices extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        nav5 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
@@ -143,7 +184,7 @@ public class memberServices extends javax.swing.JFrame {
         nav2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Profile");
+        jLabel3.setText("My Transaction");
         nav2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
         jPanel2.add(nav2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 270, 170, 40));
@@ -183,7 +224,7 @@ public class memberServices extends javax.swing.JFrame {
         nav4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("My Transaction");
+        jLabel6.setText("Payment");
         nav4.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
         jPanel2.add(nav4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 340, 170, 40));
@@ -215,12 +256,32 @@ public class memberServices extends javax.swing.JFrame {
         jLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Services.png"))); // NOI18N
         jPanel2.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 50, 50));
 
-        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Proofile.png"))); // NOI18N
-        jPanel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, 50, 50));
-
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dashBlogo.png"))); // NOI18N
         jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(-90, 30, 280, 150));
+
+        nav5.setBackground(new java.awt.Color(30, 30, 30));
+        nav5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nav5MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                nav5MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                nav5MouseExited(evt);
+            }
+        });
+        nav5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Profile");
+        nav5.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
+
+        jPanel2.add(nav5, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 410, 170, 40));
+
+        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Proofile.png"))); // NOI18N
+        jPanel2.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 405, 50, 50));
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 230, 700));
 
@@ -302,8 +363,8 @@ public class memberServices extends javax.swing.JFrame {
     }//GEN-LAST:event_nav1MouseClicked
 
     private void nav2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav2MouseClicked
-        memberProfile me = new memberProfile();
-        me.setVisible(true);
+        memberTransaction mo = new memberTransaction();
+        mo.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_nav2MouseClicked
 
@@ -319,7 +380,7 @@ public class memberServices extends javax.swing.JFrame {
     }//GEN-LAST:event_nav3MouseExited
 
     private void nav4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav4MouseClicked
-        memberTransaction mo = new memberTransaction();
+        memberPayment mo = new memberPayment();
         mo.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_nav4MouseClicked
@@ -334,33 +395,64 @@ public class memberServices extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
     int row = serviceTable.getSelectedRow();
-
     if (row == -1) {
         JOptionPane.showMessageDialog(null, "Select a service first!");
         return;
     }
 
-    int serviceId = Integer.parseInt(serviceTable.getValueAt(row, 0).toString());
-    String serviceName = serviceTable.getValueAt(row, 1).toString();
-    double price = Double.parseDouble(serviceTable.getValueAt(row, 4).toString());
+    int serviceId = (int) serviceTable.getValueAt(row, 0);
+    String serviceName = (String) serviceTable.getValueAt(row, 2);
+    double price = Double.parseDouble(serviceTable.getValueAt(row, 5).toString());
+    int memberId = Session.getInstance().getUserId();
 
-    Transactions t = new Transactions();
+    try (Connection conn = config.connectDB()) {
+        conn.setAutoCommit(false); // ensure both inserts happen together
 
-    boolean success = t.createTransaction(
-            Session.getInstance().getEmail(),
-            serviceId,
-            serviceName,
-            price
-    );
+        // 1️⃣ Insert into member_services
+        String sql1 = "INSERT INTO member_services(member_id, service_id, trainer_id) " +
+                      "VALUES (?, ?, (SELECT trainer_id FROM gym_services WHERE service_id=?))";
+        PreparedStatement pst1 = conn.prepareStatement(sql1);
+        pst1.setInt(1, memberId);
+        pst1.setInt(2, serviceId);
+        pst1.setInt(3, serviceId);
+        pst1.executeUpdate();
 
-    if (success) {
-        JOptionPane.showMessageDialog(null, "Transaction Created!");
-        Services services = new Services();
-        services.loadActiveServices(serviceTable);
-    } else {
-        JOptionPane.showMessageDialog(null, "Failed to create transaction.");
-    }    
+        // 2️⃣ Insert into transactions
+        String sql2 = "INSERT INTO transactions(member_id, service_id, trainer_id, service_name, amount, status) " +
+              "VALUES (?, ?, (SELECT trainer_id FROM gym_services WHERE service_id=?), ?, ?, ?)";
+        PreparedStatement pst2 = conn.prepareStatement(sql2);
+        pst2.setInt(1, memberId);
+        pst2.setInt(2, serviceId);
+        pst2.setInt(3, serviceId);        // used in SELECT trainer_id
+        pst2.setString(4, serviceName);
+        pst2.setDouble(5, price);
+        pst2.setString(6, "Pending");
+        pst2.executeUpdate();
+
+        conn.commit();
+
+        JOptionPane.showMessageDialog(null, "Service availed successfully!");
+        loadServices(); // refresh the service table so this service disappears for this member
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Failed to avail service: " + e.getMessage());
+    }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void nav5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav5MouseClicked
+        memberProfile me = new memberProfile();
+        me.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_nav5MouseClicked
+
+    private void nav5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav5MouseEntered
+        nav2.setBackground(new Color (255, 249, 196));
+    }//GEN-LAST:event_nav5MouseEntered
+
+    private void nav5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nav5MouseExited
+        nav2.setBackground(new Color(30,30,30));
+    }//GEN-LAST:event_nav5MouseExited
 
     
     public static void main(String args[]) {
@@ -393,7 +485,7 @@ public class memberServices extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
@@ -401,6 +493,7 @@ public class memberServices extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -410,6 +503,7 @@ public class memberServices extends javax.swing.JFrame {
     private javax.swing.JPanel nav2;
     private javax.swing.JPanel nav3;
     private javax.swing.JPanel nav4;
+    private javax.swing.JPanel nav5;
     private javax.swing.JTable serviceTable;
     // End of variables declaration//GEN-END:variables
 }
